@@ -58,3 +58,6 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+VideoPlayer/Library/
+VideoPlayer/Temp/
+VideoPlayer/obj/
