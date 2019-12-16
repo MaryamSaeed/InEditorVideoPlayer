@@ -1,5 +1,6 @@
 <UXML xmlns="UnityEngine.UIElements">
   <Template path="Assets/Editor/Resources/ButtonTemplate.uxml" name="button-template" />
+  <Template path="Assets/Editor/Resources/VideoTemplate.uxml" name="video-template" />
   <VisualElement class="buttons-container">
     <Instance template="button-template" name="Play" />
     <Instance template="button-template" name="Pause"/>
