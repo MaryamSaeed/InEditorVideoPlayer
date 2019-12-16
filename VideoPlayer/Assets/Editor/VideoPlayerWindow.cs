@@ -13,13 +13,15 @@ public class VideoPlayerWindow :EditorWindow
     private void OnEnable()
     {
         var root = rootVisualElement;
+        var buttonsVisualTree = Resources.Load<VisualTreeAsset>("VideoPlayerMain");
+        buttonsVisualTree.CloneTree(root);
+        var videoPlayerButtons = root.Query<Button>();
+        videoPlayerButtons.ForEach(SetupButton);
     }
-
-    //private Button CreatButton(string buttontext,float width,float height)
-    //{
-    //    var newButton = new Button() { text = buttontext };
-    //    newButton.style.width = width;
-    //    newButton.style.height = height;
-    //    return newButton;
-    //}
+    private void SetupButton(Button button)
+    {
+        var buttonIcon = button.Q(className: "videoplayer-button-icon");
+        button.text = "new button";
+        button.clickable.clicked += () => Debug.Log("button " + button.parent.name);
+    }
 }
