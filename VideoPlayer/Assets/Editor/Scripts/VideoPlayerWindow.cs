@@ -13,6 +13,7 @@ public class VideoPlayerWindow :EditorWindow
     private void OnEnable()
     {
         var root = rootVisualElement;
+        root.styleSheets.Add(Resources.Load<StyleSheet>("VideoPlayerStyle"));
         var buttonsVisualTree = Resources.Load<VisualTreeAsset>("VideoPlayerMain");
         buttonsVisualTree.CloneTree(root);
         var videoPlayerButtons = root.Query<Button>();
@@ -21,7 +22,7 @@ public class VideoPlayerWindow :EditorWindow
     private void SetupButton(Button button)
     {
         var buttonIcon = button.Q(className: "videoplayer-button-icon");
-        button.text = "new button";
+        button.text = button.parent.name;
         button.clickable.clicked += () => Debug.Log("button " + button.parent.name);
     }
 }

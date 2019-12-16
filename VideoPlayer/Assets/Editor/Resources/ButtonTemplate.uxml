@@ -1,5 +1,5 @@
 <UXML xmlns="UnityEngine.UIElements">
-  <Button class="videoplayer-button">      
+  <Button class="videoplayer-button">     
     <VisualElement class="videoplayer-button-icon"/>   
   </Button>
 </UXML>
