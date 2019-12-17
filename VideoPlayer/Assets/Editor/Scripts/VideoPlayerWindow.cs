@@ -32,9 +32,7 @@ public class VideoPlayerWindow :EditorWindow
     }
     private void InitVideoArea(VisualElement root)
     {
-        var videoVisualTree = new VisualTreeAsset();
-        videoVisualTree.CloneTree(root);
-        var videoPlayerComponent = new VideoPlayer();
-        videoPlayerComponent.url = "";
+        var videoPlayerArea = root.Query<Image>();
+        videoPlayerArea.First().image = Resources.Load<Texture2D>("555.jpg");
     }
 }

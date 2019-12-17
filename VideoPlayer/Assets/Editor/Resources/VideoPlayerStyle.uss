@@ -2,20 +2,20 @@
     /* Populates the elements in this container horizontally. */
     flex-direction: row;
     /* Makes the content of the container wrap when resized. */
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    /* Style rule that aligns items on the horizontal axis. */
+    align-items: flex-end;
+    /* Style rule that aligns items on the vertical axis. */
+    justify-content: space-around;
 }
 .videoplayer-button {
     width: 50px;
     height: 50px;
-    /* Style rule that aligns items on the horizontal axis. */
-    align-items: flex-end;
-    /* Style rule that aligns items on the vertical axis. */
-    justify-content: center;
 }
 
 .videoplayer-button-icon {
-    height: 20px;
-    width: 60px;
+    height: 50px;
+    width: 50px;
     opacity: 0.2;
 }
 .videoplayer-button-icon:hover {
@@ -23,4 +23,8 @@
 }
 .videoplayer-button:active > .quicktool-button-icon {
     opacity: 0.6;
+}
+.video-area{
+    height: 500px;
+    width: 600px;
 }

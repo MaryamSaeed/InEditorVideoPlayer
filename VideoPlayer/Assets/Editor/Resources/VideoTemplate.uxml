@@ -1,3 +1,7 @@
 <UXML xmlns="UnityEngine.UIElements">
-  <Image class="videoplayer-image"/>
+    <VisualElement class="video-area">
+        <Image name="lanscapeImage" image="555.jpg"/>
+        <Label name="nameLabel" text="Name"/>
+        <Label name="time" text="42"/>
+    </VisualElement>
 </UXML>
