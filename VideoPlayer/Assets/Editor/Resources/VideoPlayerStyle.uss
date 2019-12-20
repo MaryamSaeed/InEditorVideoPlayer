@@ -7,12 +7,13 @@
     align-items: flex-end;
     /* Style rule that aligns items on the vertical axis. */
     justify-content: space-around;
+    flex-grow:1;
+    flex-basis:auto;
 }
 .videoplayer-button {
     width: 50px;
     height: 50px;
 }
-
 .videoplayer-button-icon {
     height: 50px;
     width: 50px;
@@ -25,6 +26,16 @@
     opacity: 0.6;
 }
 .video-area{
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow:1;
+    flex-basis:auto;
+}
+#lanscapeImage{
+    background-image: resource("Assets/Editor/Resources/555.jpg");
     height: 500px;
-    width: 600px;
+    width: 666px;
+    flex-grow:1;
+    flex-basis:auto;
 }

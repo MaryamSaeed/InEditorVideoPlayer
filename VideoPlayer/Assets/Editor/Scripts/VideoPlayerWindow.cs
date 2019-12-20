@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEngine.UIElements;
 using UnityEngine.Video;
+using System.IO;
 
 public class VideoPlayerWindow :EditorWindow
 {
@@ -9,6 +10,7 @@ public class VideoPlayerWindow :EditorWindow
     public static void ShowVideoPlayerWindow()
     {
         var window = GetWindow<VideoPlayerWindow>("Unity Video Player");
+        window.minSize = new Vector2(666, 500);
     }
 
     private void OnEnable()
@@ -16,6 +18,7 @@ public class VideoPlayerWindow :EditorWindow
         var root = rootVisualElement;
         root.styleSheets.Add(Resources.Load<StyleSheet>("VideoPlayerStyle"));
         InitButtonContainer(root);
+        InitVideoArea(root);
     }
     private void SetupButton(Button button)
     {
@@ -32,7 +35,12 @@ public class VideoPlayerWindow :EditorWindow
     }
     private void InitVideoArea(VisualElement root)
     {
-        var videoPlayerArea = root.Query<Image>();
-        videoPlayerArea.First().image = Resources.Load<Texture2D>("555.jpg");
+        var videoPlayerImage = root.Query<Image>();
+        VideoPlayer videoPlayer = new VideoPlayer();
+        videoPlayer.source = VideoSource.Url;
+        videoPlayer.renderMode = VideoRenderMode.APIOnly;
+        videoPlayer.url = string.Concat(Directory.GetCurrentDirectory(), "/videoSmple/movie1.mp4");
+        videoPlayerImage.First().image = videoPlayer.texture;
+        videoPlayer.Play();
     }
 }
