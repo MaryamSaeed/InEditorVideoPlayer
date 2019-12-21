@@ -1,22 +1,30 @@
 .outer-container{
- background-color:#504C5A;
+  background-color:#504C5A;
   width: 800px;
   height: 800px;
-  flex-grow:1;
   flex-direction: row;
-  align-items: flex-end;
+  align-items: center;
 }
+Label {
+    -unity-text-align: upper-center;
+}
+
 .playlist-name
 {
   width: 300px;
   height: 50px;
+  justify-content: center;
+  background-color:#7A7882;
+  border-width: 5px;
+  border-color: #3D3C41;
 }
 .playlist-container
 {
   width: 300px;
   height: 800px;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  align-items: center; 
 }
 .buttons-container {
     /* Populates the elements in this container horizontally. */
@@ -54,17 +62,13 @@
 }
 
 #lanscapeImage{
+    /*background-image: resource("Assets/Editor/Resources/555.jpg");*/
     height: 500px;
     width: 500px;
-    flex-grow:0;
-    flex-basis:auto;
 }
 .drop-area {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 50px;
-    right: 50px;
+    height: 700px;
+    width: 300px;
     background-color: #FBFBFB;
     border-width: 5px;
     border-color: #FBFBFB;

@@ -3,13 +3,15 @@ using UnityEditor;
 using UnityEngine.UIElements;
 using UnityEngine.Video;
 using System.IO;
-
 public class VideoPlayerWindow :EditorWindow
 {
+    static VideoPlayerWindow window;
     [MenuItem("Video/VideoPlayerWindow _%p")]
     public static void ShowVideoPlayerWindow()
     {
-        var window = GetWindow<VideoPlayerWindow>("Unity Video Player");
+        window = GetWindow<VideoPlayerWindow>("Unity Video Player");
+        window.maxSize = new Vector2(800, 800);
+        
     }
 
     private void OnEnable()
@@ -33,30 +35,27 @@ public class VideoPlayerWindow :EditorWindow
         videoPlayerButtons.ForEach(SetupButton);
     }
     VideoPlayer videoPlayer;
-    Texture TargetDisplay;
     private void InitVideoArea(VisualElement root)
     {
         var videoPlayerImage = root.Query<Image>();
-        TargetDisplay = videoPlayerImage.First().image;
+        videoPlayerImage.First().image = Resources.Load<RenderTexture>("Video");
         videoPlayer = FindObjectOfType<VideoPlayer>();
         videoPlayer.source = VideoSource.Url;
         videoPlayer.url = string.Concat(Directory.GetCurrentDirectory(), "/videoSmple/movie1.mp4");
-        videoPlayer.renderMode = VideoRenderMode.APIOnly;
         videoPlayer.sendFrameReadyEvents = true;
         videoPlayer.frameReady += OnNewFrameReady;
         videoPlayer.prepareCompleted += OnVideoPrepared;
         videoPlayer.Prepare();
     }
+ 
 
     private void OnNewFrameReady(VideoPlayer source, long frameIdx)
     {
-        if (source.texture)
-            TargetDisplay = (Texture)source.texture;
-        Debug.Log(source.texture as Texture);
+       window.Repaint();
     }
     private void OnVideoPrepared(VideoPlayer source)
     {
         Debug.Log("VideoPrepared");
-        //videoPlayer.Play();
+        videoPlayer.Play();
     }
 }
