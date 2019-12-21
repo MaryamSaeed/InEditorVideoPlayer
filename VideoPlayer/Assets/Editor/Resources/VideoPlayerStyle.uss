@@ -1,3 +1,23 @@
+.outer-container{
+ background-color:#504C5A;
+  width: 800px;
+  height: 800px;
+  flex-grow:1;
+  flex-direction: row;
+  align-items: flex-end;
+}
+.playlist-name
+{
+  width: 300px;
+  height: 50px;
+}
+.playlist-container
+{
+  width: 300px;
+  height: 800px;
+  flex-direction: column;
+  justify-content: center;
+}
 .buttons-container {
     /* Populates the elements in this container horizontally. */
     flex-direction: row;
@@ -32,10 +52,28 @@
     flex-grow:1;
     flex-basis:auto;
 }
+
 #lanscapeImage{
-    background-image: resource("Assets/Editor/Resources/555.jpg");
     height: 500px;
-    width: 666px;
-    flex-grow:1;
+    width: 500px;
+    flex-grow:0;
     flex-basis:auto;
+}
+.drop-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 50px;
+    right: 50px;
+    background-color: #FBFBFB;
+    border-width: 5px;
+    border-color: #FBFBFB;
+}
+
+.drop-area:hover {
+    background-color: #ECECC1;
+}
+.drop-area.dragover {
+    border-width: 5px;
+    border-color: #FF0005;
 }
