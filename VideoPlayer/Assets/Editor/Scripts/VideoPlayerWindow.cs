@@ -5,13 +5,13 @@ using UnityEngine.Video;
 using System.IO;
 public class VideoPlayerWindow :EditorWindow
 {
-    static VideoPlayerWindow window;
+    private static VideoPlayerWindow window;
     [MenuItem("Video/VideoPlayerWindow _%p")]
     public static void ShowVideoPlayerWindow()
     {
-        window = GetWindow<VideoPlayerWindow>("Unity Video Player");
-        window.maxSize = new Vector2(800, 800);
-        
+        window = GetWindow<VideoPlayerWindow>();
+        window.maxSize = new Vector2(800,800);
+        window.titleContent = new GUIContent("Unity Video Player");
     }
 
     private void OnEnable()
