@@ -6,18 +6,17 @@ using System.IO;
 public class VideoPlayerWindow :EditorWindow
 {
     private static VideoPlayerWindow window;
+    private VideoPlayer videoPlayer;
     [MenuItem("Video/VideoPlayerWindow _%p")]
     public static void ShowVideoPlayerWindow()
     {
         window = GetWindow<VideoPlayerWindow>();
-        window.maxSize = new Vector2(800,800);
         window.titleContent = new GUIContent("Unity Video Player");
     }
-
     private void OnEnable()
     {
         var root = rootVisualElement;
-        root.styleSheets.Add(Resources.Load<StyleSheet>("VideoPlayerStyle"));
+        root.styleSheets.Add(Resources.Load<StyleSheet>("StyleSheets/VideoPlayerStyle"));
         InitButtonContainer(root);
         InitVideoArea(root);
     }
@@ -29,16 +28,15 @@ public class VideoPlayerWindow :EditorWindow
     }
     private void InitButtonContainer(VisualElement root)
     {
-        var buttonsVisualTree = Resources.Load<VisualTreeAsset>("VideoPlayerMain");
+        var buttonsVisualTree = Resources.Load<VisualTreeAsset>("UXMLs/VideoPlayerMain");
         buttonsVisualTree.CloneTree(root);
         var videoPlayerButtons = root.Query<Button>();
         videoPlayerButtons.ForEach(SetupButton);
     }
-    VideoPlayer videoPlayer;
     private void InitVideoArea(VisualElement root)
     {
         var videoPlayerImage = root.Query<Image>();
-        videoPlayerImage.First().image = Resources.Load<RenderTexture>("Video");
+        videoPlayerImage.First().image = Resources.Load<RenderTexture>("Prefabs/Video");
         videoPlayer = FindObjectOfType<VideoPlayer>();
         videoPlayer.source = VideoSource.Url;
         videoPlayer.url = string.Concat(Directory.GetCurrentDirectory(), "/videoSmple/movie1.mp4");
@@ -47,15 +45,12 @@ public class VideoPlayerWindow :EditorWindow
         videoPlayer.prepareCompleted += OnVideoPrepared;
         videoPlayer.Prepare();
     }
- 
-
     private void OnNewFrameReady(VideoPlayer source, long frameIdx)
     {
        window.Repaint();
     }
     private void OnVideoPrepared(VideoPlayer source)
     {
-        Debug.Log("VideoPrepared");
         videoPlayer.Play();
     }
 }

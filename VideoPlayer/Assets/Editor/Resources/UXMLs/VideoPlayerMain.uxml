@@ -1,6 +1,6 @@
 <UXML xmlns="UnityEngine.UIElements">
-  <Template path="Assets/Editor/Resources/ButtonTemplate.uxml" name="button-template" />
-  <Template path="Assets/Editor/Resources/VideoTemplate.uxml" name="video-template" />
+  <Template path="Assets/Editor/Resources/UXMLs/ButtonTemplate.uxml" name="button-template" />
+  <Template path="Assets/Editor/Resources/UXMLs/VideoTemplate.uxml" name="video-template" />
    <VisualElement class="outer-container">
        <VisualElement class="playlist-container">
        <VisualElement class="playlist-name">
