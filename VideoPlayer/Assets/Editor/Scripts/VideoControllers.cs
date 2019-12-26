@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 using UnityEngine.Video;
 
 public class VideoControllers
@@ -10,22 +11,43 @@ public class VideoControllers
     {
         videoPlayer = activeplayer;
     }
-    public void PlayVideo()
+    private void PlayVideo()
     {
         videoPlayer.Play();
     }
-    public void PauseVideo()
+    private  void PauseVideo()
     {
         videoPlayer.Pause();
     }
-    public void StopVideo()
+    private  void StopVideo()
     {
         videoPlayer.Stop();
     }
-    public void FastForwardVideo()
+    private  void FastForwardVideo()
     {
         if(videoPlayer.canStep)
             videoPlayer.StepForward();
     }
-   
+    public void InitControllerButton(VisualElement root)
+    {
+        var videoPlayerButtons = root.Query<Button>();
+        videoPlayerButtons.ForEach(SetupControllerButtons);
+    }
+    private void SetupControllerButtons(Button button)
+    {
+        var buttonIcon = button.Q(className: "videoplayer-button-icon");
+        switch (button.parent.name)
+        {
+            case "Play":
+                button.clickable.clicked += () => PlayVideo();
+                break;
+            case "Pause":
+                button.clickable.clicked += () => PauseVideo();
+                break;
+            case "Stop":
+                button.clickable.clicked += () => StopVideo();
+                break;
+        }
+    }
+
 }

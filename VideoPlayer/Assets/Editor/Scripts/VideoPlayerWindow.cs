@@ -17,6 +17,8 @@ public class VideoPlayerWindow :EditorWindow
     {
         var root = rootVisualElement;
         root.styleSheets.Add(Resources.Load<StyleSheet>("StyleSheets/VideoPlayerStyle"));
+        var buttonsVisualTree = Resources.Load<VisualTreeAsset>("UXMLs/VideoPlayerMain");
+        buttonsVisualTree.CloneTree(root);
         InitButtonContainer(root);
         InitVideoArea(root);
     }
@@ -28,17 +30,14 @@ public class VideoPlayerWindow :EditorWindow
     }
     private void InitButtonContainer(VisualElement root)
     {
-        var buttonsVisualTree = Resources.Load<VisualTreeAsset>("UXMLs/VideoPlayerMain");
-        buttonsVisualTree.CloneTree(root);
         var videoPlayerButtons = root.Query<Button>();
         videoPlayerButtons.ForEach(SetupButton);
     }
     private void InitVideoArea(VisualElement root)
     {
-        var videoPlayerImage = root.Query<Image>();
-        videoPlayerImage.First().image = Resources.Load<RenderTexture>("Prefabs/Video");
         videoPlayer = FindObjectOfType<VideoPlayer>();
-        videoPlayer.source = VideoSource.Url;
+        videoPlayer.renderMode = VideoRenderMode.RenderTexture;
+        videoPlayer.targetTexture = InitVideoRendererTexture(root);
         videoPlayer.url = string.Concat(Directory.GetCurrentDirectory(), "/videoSmple/movie1.mp4");
         videoPlayer.sendFrameReadyEvents = true;
         videoPlayer.frameReady += OnNewFrameReady;
@@ -52,5 +51,12 @@ public class VideoPlayerWindow :EditorWindow
     private void OnVideoPrepared(VideoPlayer source)
     {
         videoPlayer.Play();
+    }
+    private RenderTexture InitVideoRendererTexture(VisualElement root)
+    {
+        var videoPlayerImage = root.Query<Image>();
+        RenderTexture targetRt = new RenderTexture(new RenderTextureDescriptor(1024, 1024));
+        videoPlayerImage.First().image = targetRt;
+        return targetRt;
     }
 }
