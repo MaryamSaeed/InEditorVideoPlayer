@@ -4,10 +4,10 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.Video;
 
-public class VideoControllers
+public class VideoController
 {
     private VideoPlayer videoPlayer;
-    public VideoControllers(VideoPlayer activeplayer)
+    public VideoController(VideoPlayer activeplayer)
     {
         videoPlayer = activeplayer;
     }
@@ -36,6 +36,7 @@ public class VideoControllers
     private void SetupControllerButtons(Button button)
     {
         var buttonIcon = button.Q(className: "videoplayer-button-icon");
+        button.text = button.parent.name;
         switch (button.parent.name)
         {
             case "Play":
@@ -47,7 +48,9 @@ public class VideoControllers
             case "Stop":
                 button.clickable.clicked += () => StopVideo();
                 break;
+            case "Next":
+                button.clickable.clicked += () => FastForwardVideo();
+                break;
         }
     }
-
 }

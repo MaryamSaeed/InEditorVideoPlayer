@@ -9,9 +9,9 @@ public struct VideoClipData
     public string Name;
     public string URL;
 }
-[CreateAssetMenu(fileName = "PlayLists", menuName = "PlayList", order = 1)]
-public class MyScriptableObjectClass : ScriptableObject
+[CreateAssetMenu(fileName = "NewPlayList", menuName = "PlayList", order = 1)]
+public class PlaylistAsset : ScriptableObject
 {
-    public string PlaylistTitle = "New MyScriptableObject";
+    public string PlaylistTitle = "Playlist title";
     public List<VideoClipData> VideoClipList;
 }

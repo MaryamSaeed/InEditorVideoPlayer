@@ -3,35 +3,31 @@ using UnityEditor;
 using UnityEngine.UIElements;
 using UnityEngine.Video;
 using System.IO;
-public class VideoPlayerWindow :EditorWindow
+public class VideoPlayerWindow : EditorWindow
 {
-    private static VideoPlayerWindow window;
     private VideoPlayer videoPlayer;
+    private VideoController videoController;
+    private VisualElement windowRoot;
     [MenuItem("Video/VideoPlayerWindow _%p")]
     public static void ShowVideoPlayerWindow()
     {
-        window = GetWindow<VideoPlayerWindow>();
+        var window = GetWindow<VideoPlayerWindow>();
         window.titleContent = new GUIContent("Unity Video Player");
     }
     private void OnEnable()
     {
-        var root = rootVisualElement;
+        windowRoot = rootVisualElement;
+        ApplyWindowStyle(windowRoot);
+        videoController = new VideoController(videoPlayer);
+        videoController.InitControllerButton(windowRoot);
+    }
+    private void ApplyWindowStyle(VisualElement root)
+    {
+        root = rootVisualElement;
         root.styleSheets.Add(Resources.Load<StyleSheet>("StyleSheets/VideoPlayerStyle"));
         var buttonsVisualTree = Resources.Load<VisualTreeAsset>("UXMLs/VideoPlayerMain");
         buttonsVisualTree.CloneTree(root);
-        InitButtonContainer(root);
         InitVideoArea(root);
-    }
-    private void SetupButton(Button button)
-    {
-        var buttonIcon = button.Q(className: "videoplayer-button-icon");
-        button.text = button.parent.name;
-        button.clickable.clicked += () => Debug.Log("button " + button.parent.name);
-    }
-    private void InitButtonContainer(VisualElement root)
-    {
-        var videoPlayerButtons = root.Query<Button>();
-        videoPlayerButtons.ForEach(SetupButton);
     }
     private void InitVideoArea(VisualElement root)
     {
@@ -46,11 +42,11 @@ public class VideoPlayerWindow :EditorWindow
     }
     private void OnNewFrameReady(VideoPlayer source, long frameIdx)
     {
-       window.Repaint();
+        this.Repaint();
     }
     private void OnVideoPrepared(VideoPlayer source)
     {
-        videoPlayer.Play();
+
     }
     private RenderTexture InitVideoRendererTexture(VisualElement root)
     {
@@ -58,5 +54,10 @@ public class VideoPlayerWindow :EditorWindow
         RenderTexture targetRt = new RenderTexture(new RenderTextureDescriptor(1024, 1024));
         videoPlayerImage.First().image = targetRt;
         return targetRt;
+    }
+    private void OnDisable()
+    {
+        videoPlayer.Stop();
+        videoPlayer.targetTexture.Release();
     }
 }
