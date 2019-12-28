@@ -1,7 +1,7 @@
 <UXML xmlns="UnityEngine.UIElements">
-    <VisualElement class="video-area">
-        <Image name="lanscapeImage"/>
-        <Label name="nameLabel" text="Name"/>
-        <Label name="time" text="42"/>
-    </VisualElement>
+  <Template path="Assets/Editor/Resources/UXMLs/ProgressSliderTmplate.uxml" name="slider-template" />
+  <VisualElement class="video-area">
+    <Image name="lanscapeImage"/>
+    <Instance template="slider-template" name="progressSlider" />
+  </VisualElement>
 </UXML>

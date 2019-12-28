@@ -1,24 +1,24 @@
 <UXML xmlns="UnityEngine.UIElements">
   <Template path="Assets/Editor/Resources/UXMLs/ButtonTemplate.uxml" name="button-template" />
   <Template path="Assets/Editor/Resources/UXMLs/VideoTemplate.uxml" name="video-template" />
-   <VisualElement class="outer-container">
-       <VisualElement class="playlist-container">
-       <VisualElement class="playlist-name">
+  <VisualElement class="outer-container">
+    <VisualElement class="playlist-container">
+      <VisualElement class="playlist-name">
         <Label name="PlayList" text="playlist"/>
-        </VisualElement>
-        <VisualElement class="drop-area">
-        </VisualElement>
-        </VisualElement>
-        <VisualElement class="video-container">
-          <Instance template="video-template" name="VideoArea" />
-            <VisualElement class="buttons-container">
-            <Instance template="button-template" name="Play" />
-            <Instance template="button-template" name="Pause"/>
-            <Instance template="button-template" name="Stop"/>
-            <Instance template="button-template" name="Next"/>
-            <Instance template="button-template" name="Prev"/>
-            </VisualElement>
-        </VisualElement>
+      </VisualElement>
+      <VisualElement class="drop-area">
+      </VisualElement>
     </VisualElement>
-  
+    <VisualElement class="video-container">
+      <Instance template="video-template" name="VideoArea" />
+      <VisualElement class="buttons-container">
+        <Instance template="button-template" name="Play" />
+        <Instance template="button-template" name="Pause"/>
+        <Instance template="button-template" name="Stop"/>
+        <Instance template="button-template" name="Next"/>
+        <Instance template="button-template" name="Prev"/>
+      </VisualElement>
+    </VisualElement>
+  </VisualElement>
+
 </UXML>

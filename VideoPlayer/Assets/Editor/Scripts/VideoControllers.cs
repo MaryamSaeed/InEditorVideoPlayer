@@ -53,4 +53,8 @@ public class VideoController
                 break;
         }
     }
+    private void InitControllerSlider(VisualElement root)
+    {
+
+    }
 }
