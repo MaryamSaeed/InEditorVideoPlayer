@@ -1,37 +1,55 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UIElements;
+﻿using UnityEngine.UIElements;
 using UnityEngine.Video;
+using System;
 
 public class VideoController
 {
     private VideoPlayer videoPlayer;
-    public VideoController(VideoPlayer activeplayer)
+    private VisualElement windowRoot;
+    private Slider scrubBar;
+    private Label videoTime;
+    private Label seekTime;
+    private TimeSpan timeSpan;
+    public VideoController(VideoPlayer activeplayer,VisualElement root)
     {
         videoPlayer = activeplayer;
+        windowRoot = root;
+        InitControllerButton();
+        InitControllerSlider();
+        videoPlayer.frameReady += OnNewFrameReady;
+        videoPlayer.prepareCompleted += OnVideoPrepared;
+    }
+    public void UpdateSeekTime(float value)
+    {
+        scrubBar.value = (float)value;
+        seekTime.text = Seconds2String(value);
+    }
+    public void InitControllerButton()
+    {
+        var videoPlayerButtons = windowRoot.Query<Button>();
+        videoPlayerButtons.ForEach(SetupControllerButtons);
     }
     private void PlayVideo()
     {
         videoPlayer.Play();
     }
-    private  void PauseVideo()
+    private void PauseVideo()
     {
         videoPlayer.Pause();
     }
-    private  void StopVideo()
+    private void StopVideo()
     {
         videoPlayer.Stop();
     }
-    private  void FastForwardVideo()
+    private void FastForwardVideo()
     {
-        if(videoPlayer.canStep)
+        if (videoPlayer.canStep)
             videoPlayer.StepForward();
     }
-    public void InitControllerButton(VisualElement root)
+    private void InitVideoTimeText()
     {
-        var videoPlayerButtons = root.Query<Button>();
-        videoPlayerButtons.ForEach(SetupControllerButtons);
+        videoTime.text = Seconds2String((float)videoPlayer.length);
+        scrubBar.lowValue = 0;
     }
     private void SetupControllerButtons(Button button)
     {
@@ -53,8 +71,30 @@ public class VideoController
                 break;
         }
     }
-    private void InitControllerSlider(VisualElement root)
+    private void InitControllerSlider()
     {
-
+        scrubBar = windowRoot.Query<Slider>("scrubBar");
+        scrubBar.highValue = (float)videoPlayer.length;
+        scrubBar.RegisterCallback<ChangeEvent<float>>(evt => OnChangeEvent(evt.newValue));
+        videoTime = windowRoot.Query<Label>("videoTime");
+        seekTime = windowRoot.Query<Label>("seekTime");
+        InitVideoTimeText();
+    }
+    private void OnChangeEvent(float value)
+    {
+        UpdateSeekTime(value);
+    }
+    private string Seconds2String(float value)
+    {
+        timeSpan = TimeSpan.FromSeconds(value);
+        return timeSpan.ToString(@"hh\:mm\:ss");
+    }
+    private void OnVideoPrepared(VideoPlayer source)
+    {
+        InitControllerSlider();
+    }
+    private void OnNewFrameReady(VideoPlayer source, long frameIdx)
+    {
+        UpdateSeekTime((float)source.time);
     }
 }

@@ -1,7 +1,7 @@
 <UXML xmlns="UnityEngine.UIElements">
   <VisualElement class="videoplayer-slider">
     <Label name="seekTime" text="00:00"/>
-    <Slider name="videoProgress" low-value="0" high-value="100" />
+    <Slider name="scrubBar" low-value="0" high-value="100" />
     <Label name="videoTime" text="00:00"/>
   </VisualElement>
 </UXML>

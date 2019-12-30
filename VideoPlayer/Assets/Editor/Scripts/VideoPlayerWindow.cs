@@ -18,8 +18,7 @@ public class VideoPlayerWindow : EditorWindow
     {
         windowRoot = rootVisualElement;
         ApplyWindowStyle(windowRoot);
-        videoController = new VideoController(videoPlayer);
-        videoController.InitControllerButton(windowRoot);
+        videoController = new VideoController(videoPlayer,windowRoot);
     }
     private void ApplyWindowStyle(VisualElement root)
     {
@@ -46,7 +45,7 @@ public class VideoPlayerWindow : EditorWindow
     }
     private void OnVideoPrepared(VideoPlayer source)
     {
-
+       
     }
     private RenderTexture InitVideoRendererTexture(VisualElement root)
     {
