@@ -1,6 +1,7 @@
 <UXML xmlns="UnityEngine.UIElements">
   <Template path="Assets/Editor/Resources/UXMLs/ButtonTemplate.uxml" name="button-template" />
   <Template path="Assets/Editor/Resources/UXMLs/VideoTemplate.uxml" name="video-template" />
+  <Template path="Assets/Editor/Resources/UXMLs/SoundSliderTemplate.uxml" name="sound-template" />
   <VisualElement class="outer-container">
     <VisualElement class="playlist-container">
       <VisualElement class="playlist-name">
@@ -17,6 +18,7 @@
         <Instance template="button-template" name="Stop"/>
         <Instance template="button-template" name="Next"/>
         <Instance template="button-template" name="Prev"/>
+        <Instance template="sound-template" name="Sound"/>
       </VisualElement>
     </VisualElement>
   </VisualElement>

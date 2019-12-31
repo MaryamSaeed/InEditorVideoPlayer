@@ -1,0 +1,6 @@
+<UXML xmlns="UnityEngine.UIElements">
+  <VisualElement class="videoplayer-volume">
+    <Toggle name="muteToggle"/>
+    <Slider name="volumeSlider" low-value="0" high-value="1" />
+  </VisualElement>
+</UXML>

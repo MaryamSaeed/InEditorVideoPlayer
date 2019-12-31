@@ -7,6 +7,8 @@ public class VideoController
     private VideoPlayer videoPlayer;
     private VisualElement windowRoot;
     private Slider scrubBar;
+    private Slider volumeSlider;
+    private Toggle muteToggle;
     private Label videoTime;
     private Label seekTime;
     private TimeSpan timeSpan;
@@ -15,7 +17,8 @@ public class VideoController
         videoPlayer = activeplayer;
         windowRoot = root;
         InitControllerButton();
-        InitControllerSlider();
+        InitScrubBar();
+        InitVolumeControllers();
         videoPlayer.frameReady += OnNewFrameReady;
         videoPlayer.prepareCompleted += OnVideoPrepared;
     }
@@ -71,17 +74,37 @@ public class VideoController
                 break;
         }
     }
-    private void InitControllerSlider()
+    private void InitScrubBar()
     {
         scrubBar = windowRoot.Query<Slider>("scrubBar");
         scrubBar.highValue = (float)videoPlayer.length;
-        scrubBar.RegisterCallback<ChangeEvent<float>>(evt => OnChangeEvent(evt.newValue));
+        scrubBar.RegisterCallback<ChangeEvent<float>>(evt => OnChangeProgress(evt.newValue));
         videoTime = windowRoot.Query<Label>("videoTime");
         seekTime = windowRoot.Query<Label>("seekTime");
         InitVideoTimeText();
     }
-    private void OnChangeEvent(float value)
+    private void InitVolumeControllers()
+    { 
+        muteToggle = windowRoot.Query<Toggle>("muteToggle");
+        muteToggle.RegisterCallback<ChangeEvent<bool>>(evt => OnMuteVolume(evt.newValue));
+        volumeSlider = windowRoot.Query<Slider>("volumeSlider");
+        volumeSlider.value = 1;
+        videoPlayer.SetDirectAudioVolume(0, 1);
+        volumeSlider.RegisterCallback<ChangeEvent<float>>(evt => OnChangeVolumeLevel(evt.newValue));
+    }
+    private void OnMuteVolume(bool ison)
     {
+        videoPlayer.SetDirectAudioMute(0, ison);
+        volumeSlider.SetEnabled(!ison);
+    }
+    private void OnChangeVolumeLevel(float value)
+    {
+        videoPlayer.SetDirectAudioVolume(0, value);
+    }
+    private void OnChangeProgress(float value)
+    {
+        if (videoPlayer.canSetTime)
+            videoPlayer.time = value;
         UpdateSeekTime(value);
     }
     private string Seconds2String(float value)
@@ -91,7 +114,7 @@ public class VideoController
     }
     private void OnVideoPrepared(VideoPlayer source)
     {
-        InitControllerSlider();
+        InitScrubBar();
     }
     private void OnNewFrameReady(VideoPlayer source, long frameIdx)
     {

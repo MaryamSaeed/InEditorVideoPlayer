@@ -58,5 +58,6 @@ public class VideoPlayerWindow : EditorWindow
     {
         videoPlayer.Stop();
         videoPlayer.targetTexture.Release();
+        videoPlayer.targetTexture = null;
     }
 }
