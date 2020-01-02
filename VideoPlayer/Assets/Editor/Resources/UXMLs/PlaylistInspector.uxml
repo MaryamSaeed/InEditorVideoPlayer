@@ -1,0 +1,5 @@
+<UXML xmlns="UnityEditor.UIElements">
+  <VisualElement class="inspector-container">
+  <PropertyField binding-path="PlaylistTitle" name="playlist-title-field" text=""/>
+  </VisualElement>
+</UXML>
