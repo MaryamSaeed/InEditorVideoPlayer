@@ -1,4 +1,4 @@
-<UXML xmlns="UnityEngine.UIElements">
+<UXML xmlns="UnityEngine.UIElements"  xmlns:ue="UnityEditor.UIElements">
   <Template path="Assets/Editor/Resources/UXMLs/ButtonTemplate.uxml" name="button-template" />
   <Template path="Assets/Editor/Resources/UXMLs/VideoTemplate.uxml" name="video-template" />
   <Template path="Assets/Editor/Resources/UXMLs/SoundSliderTemplate.uxml" name="sound-template" />
@@ -7,6 +7,7 @@
       <VisualElement class="playlist-name">
         <Label name="PlayList" text="playlist"/>
       </VisualElement>
+      <ue:ObjectField name="PlaylistPicker"/>
       <VisualElement class="drop-area">
       </VisualElement>
     </VisualElement>

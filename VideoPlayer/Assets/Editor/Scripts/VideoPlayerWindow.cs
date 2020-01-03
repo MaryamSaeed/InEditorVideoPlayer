@@ -3,12 +3,15 @@ using UnityEditor;
 using UnityEngine.UIElements;
 using UnityEngine.Video;
 using System.IO;
+using UnityEditor.UIElements;
+
 public class VideoPlayerWindow : EditorWindow
 {
     private VideoPlayer videoPlayer;
     private VideoController videoController;
     private VisualElement windowRoot;
-    [MenuItem("Video/VideoPlayerWindow _%p")]
+    private PlaylistAsset nowPlaying;
+    [MenuItem("Video/VideoPlayerWindow _%vp")]
     public static void ShowVideoPlayerWindow()
     {
         var window = GetWindow<VideoPlayerWindow>();
@@ -26,7 +29,15 @@ public class VideoPlayerWindow : EditorWindow
         root.styleSheets.Add(Resources.Load<StyleSheet>("StyleSheets/VideoPlayerStyle"));
         var buttonsVisualTree = Resources.Load<VisualTreeAsset>("UXMLs/VideoPlayerMain");
         buttonsVisualTree.CloneTree(root);
+        InitPlaylistArea(root);
         InitVideoArea(root);
+    }
+    private void InitPlaylistArea(VisualElement root)
+    {
+        var picker = root.Q<ObjectField>("PlaylistPicker");
+        picker.objectType = typeof(PlaylistAsset);
+        picker.bindingPath = "nowPlaying";
+        picker.label = "Now Playing";
     }
     private void InitVideoArea(VisualElement root)
     {
