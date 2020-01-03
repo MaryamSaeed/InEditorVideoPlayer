@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlaylistTitle: DefultPlaylist
   VideoClipList:
-  - Name: 
-    URL: 
+  - Name: Movie1
+    URL: D:\Maryam_Work\VideoPlayer\VideoPlayer\videoSmple\movie1.mp4

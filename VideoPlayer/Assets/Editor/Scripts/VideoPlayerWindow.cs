@@ -21,7 +21,7 @@ public class VideoPlayerWindow : EditorWindow
     {
         windowRoot = rootVisualElement;
         ApplyWindowStyle(windowRoot);
-        videoController = new VideoController(videoPlayer,windowRoot);
+        videoController = new VideoController(videoPlayer, windowRoot);
     }
     private void ApplyWindowStyle(VisualElement root)
     {
@@ -29,15 +29,26 @@ public class VideoPlayerWindow : EditorWindow
         root.styleSheets.Add(Resources.Load<StyleSheet>("StyleSheets/VideoPlayerStyle"));
         var buttonsVisualTree = Resources.Load<VisualTreeAsset>("UXMLs/VideoPlayerMain");
         buttonsVisualTree.CloneTree(root);
-        InitPlaylistArea(root);
         InitVideoArea(root);
+        InitPlaylistArea(root);
     }
     private void InitPlaylistArea(VisualElement root)
     {
         var picker = root.Q<ObjectField>("PlaylistPicker");
         picker.objectType = typeof(PlaylistAsset);
-        picker.bindingPath = "nowPlaying";
+        nowPlaying = ScriptableObject.CreateInstance<PlaylistAsset>();
+        var serializedPlaylist = new SerializedObject(nowPlaying);
+        if (serializedPlaylist == null)
+            Debug.Log("failed to serialize");
+        else
+            picker.Bind(serializedPlaylist);
         picker.label = "Now Playing";
+        picker.RegisterCallback<ChangeEvent<Object>>((evt) => OnEventTest(evt.newValue));
+    }
+    private void OnEventTest(Object value)
+    {
+        nowPlaying = (PlaylistAsset)value;
+        Debug.Log("data " + nowPlaying.VideoClipList[0].URL);
     }
     private void InitVideoArea(VisualElement root)
     {
@@ -56,11 +67,11 @@ public class VideoPlayerWindow : EditorWindow
     }
     private void OnVideoPrepared(VideoPlayer source)
     {
-       
+
     }
     private RenderTexture InitVideoRendererTexture(VisualElement root)
     {
-        var videoPlayerImage = root.Query<Image>();
+        var videoPlayerImage = root.Query<Image>("lanscapeImage");
         RenderTexture targetRt = new RenderTexture(new RenderTextureDescriptor(1024, 1024));
         videoPlayerImage.First().image = targetRt;
         return targetRt;
