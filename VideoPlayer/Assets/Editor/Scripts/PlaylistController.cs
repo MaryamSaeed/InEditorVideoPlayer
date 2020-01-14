@@ -125,7 +125,6 @@ public class PlaylistController
     {
         if (PlayVideoAtUrl != null)
             PlayVideoAtUrl.Invoke(((VideoClipData)chosen).URL);
-        Debug.Log(((VideoClipData)chosen).URL);
     }
 }
 

@@ -16,7 +16,7 @@ public class VideoController
     {
         videoPlayer = activeplayer;
         windowRoot = root;
-        InitControllerButton();
+        InitControllerButtons();
         InitScrubBar();
         InitVolumeControllers();
         videoPlayer.frameReady += OnNewFrameReady;
@@ -27,10 +27,10 @@ public class VideoController
         scrubBar.value = (float)value;
         seekTime.text = Seconds2String(value);
     }
-    public void InitControllerButton()
+    public void InitControllerButtons()
     {
         var videoPlayerButtons = windowRoot.Query<Button>();
-        videoPlayerButtons.ForEach(SetupControllerButtons);
+        videoPlayerButtons.ForEach(SetupControllerButton);
     }
     private void PlayVideo()
     {
@@ -54,7 +54,7 @@ public class VideoController
         videoTime.text = Seconds2String((float)videoPlayer.length);
         scrubBar.lowValue = 0;
     }
-    private void SetupControllerButtons(Button button)
+    private void SetupControllerButton(Button button)
     {
         var buttonIcon = button.Q(className:"videoplayer-button-icon");
         button.text = button.parent.name;
@@ -124,5 +124,6 @@ public class VideoController
     public void OnPlayVideoAtUrl(string url)
     {
         videoPlayer.url = url;
+        videoPlayer.Prepare();
     }
 }

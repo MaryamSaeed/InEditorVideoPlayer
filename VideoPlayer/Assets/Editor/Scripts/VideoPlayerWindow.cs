@@ -9,9 +9,8 @@ public class VideoPlayerWindow : EditorWindow
 {
     private VideoPlayer videoPlayer;
     private VideoController videoController;
-    private VisualElement windowRoot;
-    private PlaylistAsset nowPlaying;
     private PlaylistController playlistController;
+    private VisualElement windowRoot;
     [MenuItem("Video/VideoPlayerWindow _%vp")]
     public static void ShowVideoPlayerWindow()
     {
@@ -22,7 +21,6 @@ public class VideoPlayerWindow : EditorWindow
     {
         windowRoot = rootVisualElement;
         ApplyWindowStyle(windowRoot);
-        videoController = new VideoController(videoPlayer, windowRoot);
         InitSubscribers();
     }
     private void ApplyWindowStyle(VisualElement root)
@@ -40,14 +38,16 @@ public class VideoPlayerWindow : EditorWindow
     }
     private void InitVideoArea(VisualElement root)
     {
-        videoPlayer = FindObjectOfType<VideoPlayer>();
+        string path = "Assets/Editor/Resources/Prefabs/VideoPlayer.prefab";
+        GameObject prefabObject = Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(path));
+        videoPlayer = prefabObject.GetComponent<VideoPlayer>();
+
         videoPlayer.renderMode = VideoRenderMode.RenderTexture;
         videoPlayer.targetTexture = InitVideoRendererTexture(root);
-        //videoPlayer.url = "";
         videoPlayer.sendFrameReadyEvents = true;
         videoPlayer.frameReady += OnNewFrameReady;
         videoPlayer.prepareCompleted += OnVideoPrepared;
-        videoPlayer.Prepare();
+        videoController = new VideoController(videoPlayer, windowRoot);
     }
     private void InitSubscribers()
     {
@@ -59,7 +59,7 @@ public class VideoPlayerWindow : EditorWindow
     }
     private void OnVideoPrepared(VideoPlayer source)
     {
-       
+
     }
     private RenderTexture InitVideoRendererTexture(VisualElement root)
     {
@@ -72,6 +72,6 @@ public class VideoPlayerWindow : EditorWindow
     {
         videoPlayer.Stop();
         videoPlayer.targetTexture.Release();
-        videoPlayer.targetTexture = null;
+        DestroyImmediate((Object)videoPlayer.gameObject);
     }
 }

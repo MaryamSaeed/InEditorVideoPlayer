@@ -18,5 +18,6 @@ public struct VideoClipData
 public class PlaylistAsset : ScriptableObject
 {
     public string PlaylistTitle = "Playlist title";
+    [SerializeField]
     public List<VideoClipData> VideoClipList;
 }
