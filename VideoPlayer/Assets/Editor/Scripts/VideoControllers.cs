@@ -56,7 +56,7 @@ public class VideoController
     }
     private void SetupControllerButtons(Button button)
     {
-        var buttonIcon = button.Q(className: "videoplayer-button-icon");
+        var buttonIcon = button.Q(className:"videoplayer-button-icon");
         button.text = button.parent.name;
         switch (button.parent.name)
         {
@@ -115,9 +115,14 @@ public class VideoController
     private void OnVideoPrepared(VideoPlayer source)
     {
         InitScrubBar();
+        PlayVideo();
     }
     private void OnNewFrameReady(VideoPlayer source, long frameIdx)
     {
         UpdateSeekTime((float)source.time);
+    }
+    public void OnPlayVideoAtUrl(string url)
+    {
+        videoPlayer.url = url;
     }
 }

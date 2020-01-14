@@ -7,6 +7,11 @@ public struct VideoClipData
 {
     public string Name;
     public string URL;
+
+    public static implicit operator VideoClipData(UnityEngine.Object v)
+    {
+        throw new NotImplementedException();
+    }
 }
 [CreateAssetMenu(fileName = "NewPlayList", menuName = "PlayList", order = 1)]
 [Serializable]
@@ -14,5 +19,4 @@ public class PlaylistAsset : ScriptableObject
 {
     public string PlaylistTitle = "Playlist title";
     public List<VideoClipData> VideoClipList;
-   
 }

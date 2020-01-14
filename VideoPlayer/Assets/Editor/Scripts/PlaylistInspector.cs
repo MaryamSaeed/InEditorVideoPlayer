@@ -19,15 +19,16 @@ public class PlaylistInspector : Editor
     {
         root = new VisualElement();
         root.Clear();
+        AddPropertyFields();
+        return root;
+    }
+    private void AddPropertyFields()
+    {
         root.Add(new PropertyField(serializedObject.FindProperty("PlaylistTitle")));
-        root.Add(new Label("Drag videos directly to the list"));
+        root.Add(new Label("Add videoClips Names and URl"));
         root.Add(new PropertyField(serializedObject.FindProperty("VideoClipList")));
         root.Bind(serializedObject);
         targetAsset.PlaylistTitle = serializedObject.targetObject.name;
         serializedObject.ApplyModifiedProperties();
-        return root;
     }
-    private void OnChenge()
-    { }
-
 }

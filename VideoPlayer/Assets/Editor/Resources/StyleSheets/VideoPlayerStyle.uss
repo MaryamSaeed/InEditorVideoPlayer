@@ -77,10 +77,10 @@ ObjectField
     height: 30px;
     width: 500px;
 }
-.drop-area {
+.video-list-area {
     height: 700px;
     width: 300px;
-    background-color: #FBFBFB;
+    background-color: #ECECC1;
     border-width: 5px;
     border-color: #FBFBFB;
 }
@@ -105,10 +105,6 @@ ObjectField
     height: 25px;
     width: 450px;
 }
-.drop-area:hover {
+.video-list-area:hover {
     background-color: #ECECC1;
-}
-.drop-area.dragover {
-    border-width: 5px;
-    border-color: #FF0005;
 }

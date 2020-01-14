@@ -5,10 +5,11 @@
   <VisualElement class="outer-container">
     <VisualElement class="playlist-container">
       <VisualElement class="playlist-name">
-        <Label name="PlayList" text="playlist"/>
+        <Label name="PlayListTitle" text="playlist"/>
       </VisualElement>
       <ue:ObjectField name="PlaylistPicker"/>
-      <VisualElement class="drop-area">
+      <VisualElement class="video-list-area">
+        <Label name="PlaylistStatus" text="this play list is empty"/>
       </VisualElement>
     </VisualElement>
     <VisualElement class="video-container">

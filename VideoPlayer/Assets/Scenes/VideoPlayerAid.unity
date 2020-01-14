@@ -291,7 +291,7 @@ PrefabInstance:
     - target: {fileID: 7758558698399301569, guid: 95010e543214d4498bbb93dc11c51a37,
         type: 3}
       propertyPath: m_Url
-      value: D:\Maryam_Work\VideoPlayer\VideoPlayer/videoSmple/movie1.mp4
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7758558698399301569, guid: 95010e543214d4498bbb93dc11c51a37,
         type: 3}

@@ -61,3 +61,4 @@ crashlytics-build.properties
 VideoPlayer/Library/
 VideoPlayer/Temp/
 VideoPlayer/obj/
+*.mp4

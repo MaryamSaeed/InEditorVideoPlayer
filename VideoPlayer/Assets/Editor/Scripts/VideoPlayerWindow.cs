@@ -11,6 +11,7 @@ public class VideoPlayerWindow : EditorWindow
     private VideoController videoController;
     private VisualElement windowRoot;
     private PlaylistAsset nowPlaying;
+    private PlaylistController playlistController;
     [MenuItem("Video/VideoPlayerWindow _%vp")]
     public static void ShowVideoPlayerWindow()
     {
@@ -22,6 +23,7 @@ public class VideoPlayerWindow : EditorWindow
         windowRoot = rootVisualElement;
         ApplyWindowStyle(windowRoot);
         videoController = new VideoController(videoPlayer, windowRoot);
+        InitSubscribers();
     }
     private void ApplyWindowStyle(VisualElement root)
     {
@@ -34,32 +36,22 @@ public class VideoPlayerWindow : EditorWindow
     }
     private void InitPlaylistArea(VisualElement root)
     {
-        var picker = root.Q<ObjectField>("PlaylistPicker");
-        picker.objectType = typeof(PlaylistAsset);
-        nowPlaying = ScriptableObject.CreateInstance<PlaylistAsset>();
-        var serializedPlaylist = new SerializedObject(nowPlaying);
-        if (serializedPlaylist == null)
-            Debug.Log("failed to serialize");
-        else
-            picker.Bind(serializedPlaylist);
-        picker.label = "Now Playing";
-        picker.RegisterCallback<ChangeEvent<Object>>((evt) => OnEventTest(evt.newValue));
-    }
-    private void OnEventTest(Object value)
-    {
-        nowPlaying = (PlaylistAsset)value;
-        Debug.Log("data " + nowPlaying.VideoClipList[0].URL);
+        playlistController = new PlaylistController(root);
     }
     private void InitVideoArea(VisualElement root)
     {
         videoPlayer = FindObjectOfType<VideoPlayer>();
         videoPlayer.renderMode = VideoRenderMode.RenderTexture;
         videoPlayer.targetTexture = InitVideoRendererTexture(root);
-        videoPlayer.url = string.Concat(Directory.GetCurrentDirectory(), "/videoSmple/movie1.mp4");
+        //videoPlayer.url = "";
         videoPlayer.sendFrameReadyEvents = true;
         videoPlayer.frameReady += OnNewFrameReady;
         videoPlayer.prepareCompleted += OnVideoPrepared;
         videoPlayer.Prepare();
+    }
+    private void InitSubscribers()
+    {
+        playlistController.PlayVideoAtUrl.AddListener(videoController.OnPlayVideoAtUrl);
     }
     private void OnNewFrameReady(VideoPlayer source, long frameIdx)
     {
@@ -67,7 +59,7 @@ public class VideoPlayerWindow : EditorWindow
     }
     private void OnVideoPrepared(VideoPlayer source)
     {
-
+       
     }
     private RenderTexture InitVideoRendererTexture(VisualElement root)
     {
