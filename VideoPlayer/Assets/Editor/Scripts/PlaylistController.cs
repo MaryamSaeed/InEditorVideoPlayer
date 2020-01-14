@@ -53,14 +53,12 @@ public class PlaylistController
         }
     }
     private System.Func<VisualElement> makeItem = () => new Label();
-    private System.Action<VisualElement,int> bindItem = BindListItem;
-    private static void BindListItem(VisualElement element, int index)
-    {
-        (element as Label).text = nowPlaying.VideoClipList[index].Name;
-    }
+    private System.Action<VisualElement, int> bindListItem = (e, i) => {
+        (e as Label).text = nowPlaying.VideoClipList[i].Name; 
+    };
     private void InitVideoListView(List<VideoClipData> source)
     {
-        var videoListView = new ListView(source, itemHeight, makeItem, bindItem);
+        var videoListView = new ListView(source, itemHeight, makeItem, bindListItem);
         videoListView.selectionType = SelectionType.Single;
         videoListView.onItemChosen += obj => OnVideoChosen(obj);
         videoListView.style.flexGrow = 1.0f;

@@ -11,8 +11,12 @@ using System.IO;
 public class PlaylistInspector : Editor
 {
     private VisualElement root;
-    private PlaylistAsset targetAsset;
+    private static PlaylistAsset targetAsset;
     private WindowsForms.OpenFileDialog filePicker;
+    private ListView playlistView;
+    private VideoClipData selectedItem;
+    private const int itemHeight = 20;
+    private const int listViewHeight = 200;
     void OnEnable()
     {
         targetAsset = (PlaylistAsset)target;
@@ -22,17 +26,16 @@ public class PlaylistInspector : Editor
         root = new VisualElement();
         root.Clear();
         AddPropertyFields();
+        AddPlaylistview();
         AddPlaylistUtilities();
         return root;
     }
     private void AddPropertyFields()
     {
         root.Add(new PropertyField(serializedObject.FindProperty("PlaylistTitle")));
-        Label inspectorText = new Label("Add videoClips Names and URl");
+        Label inspectorText = new Label("Add videoClips to this List");
         inspectorText.style.alignSelf = Align.Center;
         root.Add(inspectorText);
-        root.Add(new PropertyField(serializedObject.FindProperty("VideoClipList")));
-        root.Bind(serializedObject);
         targetAsset.PlaylistTitle = serializedObject.targetObject.name;
         serializedObject.ApplyModifiedProperties();
     }
@@ -47,9 +50,26 @@ public class PlaylistInspector : Editor
         addVideo.clickable.clicked += () => OnAddVideoClicked();
         root.Add(addVideo);
     }
-    private void AddPlaylistListview()
-    { 
-    
+    private System.Func<VisualElement> makeItem = () => new Label();
+    private System.Action<VisualElement, int> bindListItem = (e, i) => {
+        (e as Label).text = targetAsset.VideoClipList[i].Name;
+    };
+    private void AddPlaylistview()
+    {
+        var playlistContainer = new VisualElement();
+        playlistContainer.style.height = listViewHeight;
+        playlistContainer.style.backgroundColor = Color.white;
+        playlistContainer.style.borderBottomWidth = 2;
+        playlistContainer.style.borderTopWidth = 2;
+        playlistContainer.style.borderLeftWidth = 2;
+        playlistContainer.style.borderRightWidth = 2;
+        playlistContainer.style.borderColor = Color.grey;
+        playlistView = new ListView(targetAsset.VideoClipList, itemHeight, makeItem, bindListItem);
+        playlistView.selectionType = SelectionType.Single;
+        playlistView.onItemChosen += obj => { selectedItem = (VideoClipData)obj; };
+        playlistView.style.flexGrow = 1.0f;
+        playlistContainer.Add(playlistView);
+        root.Add(playlistContainer);
     }
     private void OnAddVideoClicked()
     {
@@ -65,8 +85,8 @@ public class PlaylistInspector : Editor
                     videoData.URL = filePicker.FileNames[i];
                     videoData.Name = filePicker.SafeFileNames[i];
                     targetAsset.VideoClipList.Add(videoData);
+                    playlistView.Refresh();
                 }
         }
     }
-
 }
