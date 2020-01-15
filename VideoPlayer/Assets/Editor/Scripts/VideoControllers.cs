@@ -52,7 +52,7 @@ public class VideoController
     private void SetupControllerButton(Button button)
     {
         var buttonIcon = button.Q(className:"videoplayer-button-icon");
-        button.text = button.parent.name;
+        button.style.backgroundImage = null;
         switch (button.parent.name)
         {
             case "Play":

@@ -18,8 +18,8 @@
         <Instance template="button-template" name="Play" />
         <Instance template="button-template" name="Pause"/>
         <Instance template="button-template" name="Stop"/>
-        <Instance template="button-template" name="Next"/>
         <Instance template="button-template" name="Prev"/>
+        <Instance template="button-template" name="Next"/>
         <Instance template="sound-template" name="Sound"/>
       </VisualElement>
     </VisualElement>
