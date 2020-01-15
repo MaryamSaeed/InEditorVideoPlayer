@@ -105,7 +105,7 @@ public class PlaylistController
     }
     private void NextVideo()
     {
-        if (currentVideoId < nowPlaying.VideoClipList.Count)
+        if (currentVideoId < nowPlaying.VideoClipList.Count-1)
         {
             currentVideoId++;
             PlayVideoWithId(currentVideoId);

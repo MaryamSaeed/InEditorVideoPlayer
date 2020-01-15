@@ -11,12 +11,13 @@ using System.IO;
 public class PlaylistInspector : Editor
 {
     private VisualElement root;
-    private static PlaylistAsset targetAsset;
-    private WindowsForms.OpenFileDialog filePicker;
     private ListView playlistView;
     private VideoClipData selectedItem;
     private const int itemHeight = 20;
     private const int listViewHeight = 200;
+    private static PlaylistAsset targetAsset;
+    private static Button removeVideoButton;
+    private WindowsForms.OpenFileDialog filePicker;
     void OnEnable()
     {
         targetAsset = (PlaylistAsset)target;
@@ -25,51 +26,92 @@ public class PlaylistInspector : Editor
     {
         root = new VisualElement();
         root.Clear();
-        AddPropertyFields();
-        AddPlaylistview();
-        AddPlaylistUtilities();
+        root.style.flexDirection = FlexDirection.Column;
+        root.style.justifyContent = Justify.SpaceBetween;
+        AddPlaylistInpectorVisualElements();
         return root;
+    }
+    private void InitFilePicker()
+    {
+        filePicker = new WindowsForms.OpenFileDialog();
+        filePicker.Filter = "All Videos Files |*.mp4;";
+        filePicker.Multiselect = true;
     }
     private void AddPropertyFields()
     {
         root.Add(new PropertyField(serializedObject.FindProperty("PlaylistTitle")));
-        Label inspectorText = new Label("Add videoClips to this List");
+        Label inspectorText = new Label("List of video Clips");
         inspectorText.style.alignSelf = Align.Center;
         root.Add(inspectorText);
         targetAsset.PlaylistTitle = serializedObject.targetObject.name;
         serializedObject.ApplyModifiedProperties();
     }
-    private void AddPlaylistUtilities()
+    private void AddRemovalInstructions()
     {
-        filePicker = new WindowsForms.OpenFileDialog();
-        filePicker.Filter = "All Videos Files |*.mp4;";
-        filePicker.Multiselect = true;
-        Button addVideo = new Button();
-        addVideo.text = "Add video from HD";
-        addVideo.style.alignSelf = Align.Center;
-        addVideo.clickable.clicked += () => OnAddVideoClicked();
-        root.Add(addVideo);
+        Label removalText = new Label("double click on video to remove");
+        removalText.style.alignSelf = Align.Center;
+        removalText.style.color = Color.red;
+        root.Add(removalText);
+    }
+    private void AddPlaylistInpectorVisualElements()
+    {
+        InitFilePicker();
+        AddPropertyFields();
+        AddPlaylistVisualElement();
+        SetupPlaylistInspectorButtons();
+        AddRemovalInstructions();
+    }
+    private void SetupPlaylistInspectorButtons()
+    {
+        //Video Addition Button
+        AddButton2InspectorRoot("Add video from HD",OnAddVideoClicked);
+        //Video Removal Button
+        removeVideoButton = AddButton2InspectorRoot("Remove video from list", OnRemoveVideoClicked);
+        removeVideoButton.visible = false;
     }
     private System.Func<VisualElement> makeItem = () => new Label();
-    private System.Action<VisualElement, int> bindListItem = (e, i) => {
+    private System.Action<VisualElement, int> bindListItem = (e, i) =>
+    {
         (e as Label).text = targetAsset.VideoClipList[i].Name;
     };
-    private void AddPlaylistview()
+    private Button AddButton2InspectorRoot(string buttontext, System.Action action)
     {
-        var playlistContainer = new VisualElement();
-        playlistContainer.style.height = listViewHeight;
-        playlistContainer.style.backgroundColor = Color.white;
-        playlistContainer.style.borderBottomWidth = 2;
-        playlistContainer.style.borderTopWidth = 2;
-        playlistContainer.style.borderLeftWidth = 2;
-        playlistContainer.style.borderRightWidth = 2;
-        playlistContainer.style.borderColor = Color.grey;
+        Button newButton = new Button();
+        newButton.text = buttontext;
+        newButton.style.alignSelf = Align.Center;
+        newButton.clickable.clicked += action;
+        root.Add(newButton);
+        return newButton;
+    }
+    private void AddPlaylistVisualElement()
+    {
+        VisualElement playlistContainer = new VisualElement();
+        AddListView2Container(playlistContainer);
+        ApplyContainerStyle(playlistContainer);
+        root.Add(playlistContainer);
+    }
+    private void ApplyContainerStyle(VisualElement container)
+    {
+        container.style.borderTopWidth = 2;
+        container.style.borderLeftWidth = 2;
+        container.style.borderRightWidth = 2;
+        container.style.borderBottomWidth = 2;
+        container.style.height = listViewHeight;
+        container.style.borderColor = Color.grey;
+        container.style.backgroundColor = Color.white;
+    }
+    private void AddListView2Container(VisualElement container)
+    {
         playlistView = new ListView(targetAsset.VideoClipList, itemHeight, makeItem, bindListItem);
         playlistView.selectionType = SelectionType.Single;
-        playlistView.onItemChosen += obj => { selectedItem = (VideoClipData)obj; };
+        playlistView.onItemChosen += obj => OnItemChosen(obj);
         playlistView.style.flexGrow = 1.0f;
-        playlistContainer.Add(playlistView);
-        root.Add(playlistContainer);
+        container.Add(playlistView);
+    }
+    private void OnItemChosen(System.Object obj)
+    {
+        selectedItem = (VideoClipData)obj;
+        removeVideoButton.visible = true;
     }
     private void OnAddVideoClicked()
     {
@@ -88,5 +130,11 @@ public class PlaylistInspector : Editor
                     playlistView.Refresh();
                 }
         }
+    }
+    private void OnRemoveVideoClicked()
+    {
+        targetAsset.VideoClipList.Remove(selectedItem);
+        playlistView.Refresh();
+        removeVideoButton.visible = false;
     }
 }

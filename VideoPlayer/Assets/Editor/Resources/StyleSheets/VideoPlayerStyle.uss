@@ -26,13 +26,9 @@ Label
   align-self : flex-start;
 }
 .buttons-container {
-    /* Populates the elements in this container horizontally. */
     flex-direction: row;
-    /* Makes the content of the container wrap when resized. */
     flex-wrap: nowrap;
-    /* Style rule that aligns items on the horizontal axis. */
     align-items: flex-end;
-    /* Style rule that aligns items on the vertical axis. */
     justify-content: space-around;
     flex-grow:1;
     flex-basis:auto;

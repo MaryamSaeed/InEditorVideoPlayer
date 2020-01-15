@@ -44,11 +44,6 @@ public class VideoController
     {
         videoPlayer.Stop();
     }
-    private void FastForwardVideo()
-    {
-        if (videoPlayer.canStep)
-            videoPlayer.StepForward();
-    }
     private void InitVideoTimeText()
     {
         videoTime.text = Seconds2String((float)videoPlayer.length);
@@ -68,9 +63,6 @@ public class VideoController
                 break;
             case "Stop":
                 button.clickable.clicked += () => StopVideo();
-                break;
-            case "Next":
-                button.clickable.clicked += () => FastForwardVideo();
                 break;
         }
     }
