@@ -139,8 +139,4 @@ public class PlaylistInspector : Editor
         playlistView.Refresh();
         removeVideoButton.visible = false;
     }
-    private void OnDisable()
-    {
-        filePicker.Dispose();
-    }
 }

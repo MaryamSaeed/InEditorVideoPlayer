@@ -11,7 +11,7 @@ public class VideoPlayerWindow : EditorWindow
     private VideoController videoController;
     private PlaylistController playlistController;
     private VisualElement windowRoot;
-    [MenuItem("Video/VideoPlayerWindow _%vp")]
+    [MenuItem("Video/VideoPlayerWindow _%k")]
     public static void ShowVideoPlayerWindow()
     {
         var window = GetWindow<VideoPlayerWindow>();
@@ -22,7 +22,7 @@ public class VideoPlayerWindow : EditorWindow
         windowRoot = rootVisualElement;
         ApplyWindowStyle();
         InitVideoPlayerUtilities();
-        InitSubscribers();
+        RegisterSubscriptions();
     }
     private void ApplyWindowStyle()
     {
@@ -47,10 +47,15 @@ public class VideoPlayerWindow : EditorWindow
         videoPlayer.frameReady += OnNewFrameReady;
         videoController = new VideoController(videoPlayer, windowRoot);
     }
-    private void InitSubscribers()
+    private void RegisterSubscriptions()
     {
         playlistController.PlayVideoAtUrl.AddListener(videoController.OnPlayVideoAtUrl);
         playlistController.PlaylistChanged.AddListener(videoController.OnPlaylistChanged);
+    }
+    private void UnRegiterSubscriptions()
+    {
+        playlistController.PlayVideoAtUrl.RemoveAllListeners();
+        playlistController.PlaylistChanged.RemoveAllListeners();
     }
     private void OnNewFrameReady(VideoPlayer source, long frameIdx)
     {
@@ -67,6 +72,7 @@ public class VideoPlayerWindow : EditorWindow
     {
         videoPlayer.Stop();
         videoPlayer.targetTexture.Release();
+        UnRegiterSubscriptions();
         DestroyImmediate((Object)videoPlayer.gameObject);
     }
 }

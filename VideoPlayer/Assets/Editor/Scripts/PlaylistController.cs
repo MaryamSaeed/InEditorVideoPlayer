@@ -40,6 +40,7 @@ public class PlaylistController
     }
     private void UpdatePlaylistStatus()
     {
+        PlaylistStatus.text = "This playlist is empty";
         if (nowPlaying.VideoClipList != null)
             if (nowPlaying.VideoClipList.Count > 0)
                 PlaylistStatus.visible = false;
@@ -81,24 +82,34 @@ public class PlaylistController
     }
     private void DestroyOldListView()
     {
-        videoListArea.Remove(videoListView);
+        if (videoListArea.Q<ListView>() != null)
+            videoListArea.Remove(videoListView);
     }
     private void OnPlaylistChanged(Object value)
     {
         if (playlistTitle == null)
             playlistTitle = windowRoot.Q<Label>("PlayListTitle");
         if (value != null)
-        {
-            DestroyOldListView();
-            nowPlaying = (PlaylistAsset)value;
-            videoListView = InitVideoListView(nowPlaying.VideoClipList);
-            playlistTitle.text = nowPlaying.PlaylistTitle;
-            UpdatePlaylistStatus();
-        }
+            NewPlaylistValue(value);
         else
-            playlistTitle.text = "Playlist";
+            NonePlaylistValue();
         if (PlaylistChanged != null)
             PlaylistChanged.Invoke();
+    }
+    private void NonePlaylistValue()
+    {
+        playlistTitle.text = "Playlist";
+        PlaylistStatus.text = "No playlist selected";
+        PlaylistStatus.visible = true;
+        videoListArea.Remove(videoListView);
+    }
+    private void NewPlaylistValue(Object newvalue)
+    {
+        DestroyOldListView();
+        nowPlaying = (PlaylistAsset)newvalue;
+        videoListView = InitVideoListView(nowPlaying.VideoClipList);
+        playlistTitle.text = nowPlaying.PlaylistTitle;
+        UpdatePlaylistStatus();
     }
     private void PlayVideoWithId(int id)
     {
