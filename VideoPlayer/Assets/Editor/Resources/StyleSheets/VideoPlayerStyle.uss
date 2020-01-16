@@ -89,6 +89,13 @@ ObjectField
     align-items:center;
     align-content:center;
 }
+#unity-checkmark
+{
+    margin-right:5px;
+    -unity-slice-top:0px;
+    -unity-slice-left:0px;
+     background-image: resource("Assets/Editor/Resources/Icons/Sound_Up.png");
+}
 #volumeSlider
 {
     height: 25px;

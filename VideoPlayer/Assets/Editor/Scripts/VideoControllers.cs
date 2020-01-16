@@ -1,6 +1,7 @@
 ﻿using UnityEngine.UIElements;
 using UnityEngine.Video;
 using System;
+using UnityEngine;
 
 public class VideoController
 {
@@ -11,8 +12,11 @@ public class VideoController
     private Toggle muteToggle;
     private Label videoTime;
     private Label seekTime;
+    private VisualElement toggelImage;
+    private Texture2D soundMute;
+    private Texture2D soundUp;
     private TimeSpan timeSpan;
-    public VideoController(VideoPlayer activeplayer,VisualElement root)
+    public VideoController(VideoPlayer activeplayer, VisualElement root)
     {
         videoPlayer = activeplayer;
         windowRoot = root;
@@ -27,11 +31,7 @@ public class VideoController
         scrubBar.value = (float)value;
         seekTime.text = Seconds2String(value);
     }
-    public void InitControllerButtons()
-    {
-        var videoPlayerButtons = windowRoot.Query<Button>();
-        videoPlayerButtons.ForEach(SetupControllerButton);
-    }
+
     private void PlayVideo()
     {
         videoPlayer.Play();
@@ -51,7 +51,7 @@ public class VideoController
     }
     private void SetupControllerButton(Button button)
     {
-        var buttonIcon = button.Q(className:"videoplayer-button-icon");
+        var buttonIcon = button.Q(className: "videoplayer-button-icon");
         button.style.backgroundImage = null;
         switch (button.parent.name)
         {
@@ -66,6 +66,11 @@ public class VideoController
                 break;
         }
     }
+    public void InitControllerButtons()
+    {
+        var videoPlayerButtons = windowRoot.Query<Button>();
+        videoPlayerButtons.ForEach(SetupControllerButton);
+    }
     private void InitScrubBar()
     {
         scrubBar = windowRoot.Query<Slider>("scrubBar");
@@ -75,8 +80,16 @@ public class VideoController
         seekTime = windowRoot.Query<Label>("seekTime");
         InitVideoTimeText();
     }
+    private void LoadMuteToggleImages()
+    {
+        //Reference to toggle checkmarck
+        toggelImage = windowRoot.Q("unity-checkmark");
+        soundMute = Resources.Load<Texture2D>("Icons/Sound_mute");
+        soundUp = Resources.Load<Texture2D>("Icons/Sound_Up");
+    }
     private void InitVolumeControllers()
-    { 
+    {
+        LoadMuteToggleImages();
         muteToggle = windowRoot.Query<Toggle>("muteToggle");
         muteToggle.RegisterCallback<ChangeEvent<bool>>(evt => OnMuteVolume(evt.newValue));
         volumeSlider = windowRoot.Query<Slider>("volumeSlider");
@@ -88,6 +101,10 @@ public class VideoController
     {
         videoPlayer.SetDirectAudioMute(0, ison);
         volumeSlider.SetEnabled(!ison);
+        if (ison)
+            toggelImage.style.backgroundImage = new StyleBackground(soundMute);
+        else
+            toggelImage.style.backgroundImage = new StyleBackground(soundUp);
     }
     private void OnChangeVolumeLevel(float value)
     {
