@@ -21,6 +21,8 @@ public class PlaylistInspector : Editor
     void OnEnable()
     {
         targetAsset = (PlaylistAsset)target;
+        if (targetAsset.VideoClipList == null)
+            targetAsset.VideoClipList = new List<VideoClipData>();
     }
     public override VisualElement CreateInspectorGUI()
     {

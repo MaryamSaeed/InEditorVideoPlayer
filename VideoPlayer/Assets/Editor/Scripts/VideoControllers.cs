@@ -2,6 +2,7 @@
 using UnityEngine.Video;
 using System;
 using UnityEngine;
+using System.IO;
 
 public class VideoController
 {
@@ -12,9 +13,10 @@ public class VideoController
     private Toggle muteToggle;
     private Label videoTime;
     private Label seekTime;
+    private Label videoValidity;
     private VisualElement toggelImage;
-    private Texture2D soundMute;
-    private Texture2D soundUp;
+    private StyleBackground soundMute;
+    private StyleBackground soundUp;
     private TimeSpan timeSpan;
     public VideoController(VideoPlayer activeplayer, VisualElement root)
     {
@@ -23,15 +25,11 @@ public class VideoController
         InitControllerButtons();
         InitScrubBar();
         InitVolumeControllers();
+        videoValidity = windowRoot.Q<Label>("VideoValidity");
+        videoValidity.visible = false;
         videoPlayer.frameReady += OnNewFrameReady;
         videoPlayer.prepareCompleted += OnVideoPrepared;
     }
-    public void UpdateSeekTime(float value)
-    {
-        scrubBar.value = (float)value;
-        seekTime.text = Seconds2String(value);
-    }
-
     private void PlayVideo()
     {
         videoPlayer.Play();
@@ -44,6 +42,11 @@ public class VideoController
     {
         videoPlayer.Stop();
     }
+    private void UpdateSeekTime(float value)
+    {
+        scrubBar.value = (float)value;
+        seekTime.text = Seconds2String(value);
+    }
     private void InitVideoTimeText()
     {
         videoTime.text = Seconds2String((float)videoPlayer.length);
@@ -53,6 +56,7 @@ public class VideoController
     {
         var buttonIcon = button.Q(className: "videoplayer-button-icon");
         button.style.backgroundImage = null;
+        button.text = string.Empty;
         switch (button.parent.name)
         {
             case "Play":
@@ -84,8 +88,8 @@ public class VideoController
     {
         //Reference to toggle checkmarck
         toggelImage = windowRoot.Q("unity-checkmark");
-        soundMute = Resources.Load<Texture2D>("Icons/Sound_mute");
-        soundUp = Resources.Load<Texture2D>("Icons/Sound_Up");
+        soundMute = new StyleBackground(Resources.Load<Texture2D>("Icons/Sound_mute"));
+        soundUp = new StyleBackground(Resources.Load<Texture2D>("Icons/Sound_Up"));
     }
     private void InitVolumeControllers()
     {
@@ -102,9 +106,9 @@ public class VideoController
         videoPlayer.SetDirectAudioMute(0, ison);
         volumeSlider.SetEnabled(!ison);
         if (ison)
-            toggelImage.style.backgroundImage = new StyleBackground(soundMute);
+            toggelImage.style.backgroundImage = soundMute;
         else
-            toggelImage.style.backgroundImage = new StyleBackground(soundUp);
+            toggelImage.style.backgroundImage = soundUp;
     }
     private void OnChangeVolumeLevel(float value)
     {
@@ -132,7 +136,17 @@ public class VideoController
     }
     public void OnPlayVideoAtUrl(string url)
     {
-        videoPlayer.url = url;
-        videoPlayer.Prepare();
+        if (File.Exists(url))
+        {
+            videoPlayer.url = url;
+            videoPlayer.Prepare();
+            videoValidity.visible = false;
+        }
+        else
+            videoValidity.visible = true;
+    }
+    public void OnPlaylistChanged()
+    {
+        StopVideo();
     }
 }

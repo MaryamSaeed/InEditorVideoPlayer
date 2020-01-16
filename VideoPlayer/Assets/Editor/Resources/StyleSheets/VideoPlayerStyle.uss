@@ -89,6 +89,12 @@ ObjectField
     align-items:center;
     align-content:center;
 }
+#VideoValidity
+{
+    align-self :center;
+    color :#F11C1C;
+    opacity:1;
+}
 #unity-checkmark
 {
     margin-right:5px;

@@ -20,45 +20,41 @@ public class VideoPlayerWindow : EditorWindow
     private void OnEnable()
     {
         windowRoot = rootVisualElement;
-        ApplyWindowStyle(windowRoot);
+        ApplyWindowStyle();
+        InitVideoPlayerUtilities();
         InitSubscribers();
     }
-    private void ApplyWindowStyle(VisualElement root)
+    private void ApplyWindowStyle()
     {
-        root = rootVisualElement;
-        root.styleSheets.Add(Resources.Load<StyleSheet>("StyleSheets/VideoPlayerStyle"));
+        windowRoot = rootVisualElement;
+        windowRoot.styleSheets.Add(Resources.Load<StyleSheet>("StyleSheets/VideoPlayerStyle"));
         var buttonsVisualTree = Resources.Load<VisualTreeAsset>("UXMLs/VideoPlayerMain");
-        buttonsVisualTree.CloneTree(root);
-        InitVideoArea(root);
-        InitPlaylistArea(root);
+        buttonsVisualTree.CloneTree(windowRoot);
     }
-    private void InitPlaylistArea(VisualElement root)
+    private void InitVideoPlayerUtilities()
     {
-        playlistController = new PlaylistController(root);
+        playlistController = new PlaylistController(windowRoot);
+        InitVideoControlUtility();
     }
-    private void InitVideoArea(VisualElement root)
+    private void InitVideoControlUtility()
     {
         string path = "Assets/Editor/Resources/Prefabs/VideoPlayer.prefab";
         GameObject prefabObject = Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(path));
         videoPlayer = prefabObject.GetComponent<VideoPlayer>();
         videoPlayer.renderMode = VideoRenderMode.RenderTexture;
-        videoPlayer.targetTexture = InitVideoRendererTexture(root);
+        videoPlayer.targetTexture = InitVideoRendererTexture(windowRoot);
         videoPlayer.sendFrameReadyEvents = true;
         videoPlayer.frameReady += OnNewFrameReady;
-        videoPlayer.prepareCompleted += OnVideoPrepared;
         videoController = new VideoController(videoPlayer, windowRoot);
     }
     private void InitSubscribers()
     {
         playlistController.PlayVideoAtUrl.AddListener(videoController.OnPlayVideoAtUrl);
+        playlistController.PlaylistChanged.AddListener(videoController.OnPlaylistChanged);
     }
     private void OnNewFrameReady(VideoPlayer source, long frameIdx)
     {
         this.Repaint();
-    }
-    private void OnVideoPrepared(VideoPlayer source)
-    {
-
     }
     private RenderTexture InitVideoRendererTexture(VisualElement root)
     {

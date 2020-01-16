@@ -11,11 +11,12 @@ public class PlaylistController
     public UnityEvent PlaylistChanged;
     public PlaylistEvent PlayVideoAtUrl;
     private static PlaylistAsset nowPlaying;
-    private int currentVideoId = 0;
     private VisualElement windowRoot;
     private VisualElement videoListArea;
+    private ListView videoListView;
     private Label playlistTitle;
     private Label PlaylistStatus;
+    private int currentVideoId = 0;
     private bool repeat;
     private bool autoplay;
     private const int itemHeight = 20;
@@ -24,45 +25,44 @@ public class PlaylistController
         windowRoot = root;
         PlaylistChanged = new UnityEvent();
         PlayVideoAtUrl = new PlaylistEvent();
-        InitPlaylistArea();
+        InitPlaylistVisualElements();
         InitControllerButtons();
     }
-    private void InitPlaylistArea()
+    private void InitPlaylistVisualElements()
     {
         PlaylistStatus = windowRoot.Q<Label>("PlaylistStatus");
         videoListArea = windowRoot.Q(className: "video-list-area");
-        var picker = windowRoot.Q<ObjectField>("PlaylistPicker");
-        picker.objectType = typeof(PlaylistAsset);
         nowPlaying = ScriptableObject.CreateInstance<PlaylistAsset>();
         nowPlaying = Resources.Load<PlaylistAsset>("Playlists/DefultPlaylist");
+        var picker = windowRoot.Q<ObjectField>("PlaylistPicker");
+        picker.objectType = typeof(PlaylistAsset);
         picker.SetValueWithoutNotify(nowPlaying);
         picker.label = "Now Playing";
         picker.RegisterCallback<ChangeEvent<Object>>((evt) => OnPlaylistChanged(evt.newValue));
-        UpdateVideoListView();
+        videoListView = InitVideoListView(nowPlaying.VideoClipList);
+        UpdatePlaylistStatus();
     }
-    private void UpdateVideoListView()
+    private void UpdatePlaylistStatus()
     {
-        if (nowPlaying.VideoClipList.Count > 0)
-        {
-            PlaylistStatus.visible = false;
-            InitVideoListView(nowPlaying.VideoClipList);
-        }
-        else
-        {
-            PlaylistStatus.visible = true;
-        }
+        if (nowPlaying.VideoClipList != null)
+            if (nowPlaying.VideoClipList.Count > 0)
+                PlaylistStatus.visible = false;
+            else
+                PlaylistStatus.visible = true;
     }
     private System.Func<VisualElement> makeItem = () => new Label();
-    private System.Action<VisualElement, int> bindListItem = (e, i) => {
-        (e as Label).text = nowPlaying.VideoClipList[i].Name; 
+    private System.Action<VisualElement, int> bindListItem = (e, i) =>
+    {
+            (e as Label).text = nowPlaying.VideoClipList[i].Name;
     };
-    private void InitVideoListView(List<VideoClipData> source)
+    private ListView InitVideoListView(List<VideoClipData> source)
     {
         var videoListView = new ListView(source, itemHeight, makeItem, bindListItem);
         videoListView.selectionType = SelectionType.Single;
         videoListView.onItemChosen += obj => OnVideoChosen(obj);
         videoListView.style.flexGrow = 1.0f;
         videoListArea.Add(videoListView);
+        return videoListView;
     }
     private void InitControllerButtons()
     {
@@ -83,29 +83,37 @@ public class PlaylistController
                 break;
         }
     }
+    private void DestroyOldListView()
+    {
+        videoListArea.Remove(videoListView);
+    }
     private void OnPlaylistChanged(Object value)
     {
         if (playlistTitle == null)
             playlistTitle = windowRoot.Q<Label>("PlayListTitle");
         if (value != null)
         {
+            DestroyOldListView();
             nowPlaying = (PlaylistAsset)value;
+            videoListView = InitVideoListView(nowPlaying.VideoClipList);
             playlistTitle.text = nowPlaying.PlaylistTitle;
-            if (PlaylistChanged != null)
-                PlaylistChanged.Invoke();
+            UpdatePlaylistStatus();
         }
         else
             playlistTitle.text = "Playlist";
+        if (PlaylistChanged != null)
+            PlaylistChanged.Invoke();
     }
     private void PlayVideoWithId(int id)
     {
+        videoListView.selectedIndex = currentVideoId;
         var url = nowPlaying.VideoClipList[id].URL;
         if (PlayVideoAtUrl != null)
             PlayVideoAtUrl.Invoke(url);
     }
     private void NextVideo()
     {
-        if (currentVideoId < nowPlaying.VideoClipList.Count-1)
+        if (currentVideoId < nowPlaying.VideoClipList.Count - 1)
         {
             currentVideoId++;
             PlayVideoWithId(currentVideoId);

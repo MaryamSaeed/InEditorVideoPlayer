@@ -13,6 +13,7 @@
       </VisualElement>
     </VisualElement>
     <VisualElement class="video-container">
+      <Label name="VideoValidity" text="Can't play selected Video!"/>
       <Instance template="video-template" name="VideoArea" />
       <VisualElement class="buttons-container">
         <Instance template="button-template" name="Play" />
