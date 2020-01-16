@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using System.IO;
+using System.Collections.Generic;
 
 [CustomEditor(typeof(PlaylistAsset))]
 public class PlaylistInspector : Editor
@@ -19,11 +20,12 @@ public class PlaylistInspector : Editor
     void OnEnable()
     {
         targetAsset = (PlaylistAsset)serializedObject.targetObject;
+        if (targetAsset.VideoClipList == null)
+            targetAsset.VideoClipList = new List<VideoClipData>();
         EditorUtility.SetDirty(targetAsset);
     }
     public override VisualElement CreateInspectorGUI()
     {
-        serializedObject.Update();
         root = new VisualElement();
         root.Clear();
         root.style.flexDirection = FlexDirection.Column;
@@ -129,7 +131,6 @@ public class PlaylistInspector : Editor
                     targetAsset.VideoClipList.Add(videoData);
                     playlistView.Refresh();
                 }
-            serializedObject.ApplyModifiedProperties();
         }
     }
     private void OnRemoveVideoClicked()
@@ -137,6 +138,9 @@ public class PlaylistInspector : Editor
         targetAsset.VideoClipList.Remove(selectedItem);
         playlistView.Refresh();
         removeVideoButton.visible = false;
-        serializedObject.ApplyModifiedProperties();
+    }
+    private void OnDisable()
+    {
+        filePicker.Dispose();
     }
 }

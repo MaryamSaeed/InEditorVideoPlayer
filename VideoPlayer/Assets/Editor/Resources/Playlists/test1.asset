@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f09c522c8e02934ca46add25ebc1a3c, type: 3}
-  m_Name: DefultPlaylist
+  m_Name: test1
   m_EditorClassIdentifier: 
-  PlaylistTitle: DefultPlaylist
+  PlaylistTitle: test1
   VideoClipList:
-  - Name: movie1.mp4
-    URL: D:\Maryam_Work\VideoPlayer\VideoPlayer\videoSmple\movie1.mp4
-  - Name: movie1.mp4
-    URL: D:\Maryam_Work\VideoPlayer\VideoPlayer\videoSmple\movie1.mp4
+  - Name: movie2.mp4
+    URL: D:\Maryam_Work\VideoPlayer\VideoPlayer\videoSmple\movie2.mp4
+  - Name: movie2.mp4
+    URL: D:\Maryam_Work\VideoPlayer\VideoPlayer\videoSmple\movie2.mp4
