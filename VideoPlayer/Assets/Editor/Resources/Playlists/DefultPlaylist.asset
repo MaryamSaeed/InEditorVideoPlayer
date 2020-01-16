@@ -20,9 +20,9 @@ MonoBehaviour:
     URL: D:\Maryam_Work\VideoPlayer\VideoPlayer\videoSmple\movie2.mp4
   - Name: movie3.mp4
     URL: D:\Maryam_Work\VideoPlayer\VideoPlayer\videoSmple\movie3.mp4
-  - Name: movie1.mp4
-    URL: D:\Maryam_Work\VideoPlayer\VideoPlayer\videoSmple\movie1.mp4
-  - Name: movie2.mp4
-    URL: D:\Maryam_Work\VideoPlayer\VideoPlayer\videoSmple\movie2.mp4
   - Name: movie3.mp4
     URL: D:\Maryam_Work\VideoPlayer\VideoPlayer\videoSmple\movie3.mp4
+  - Name: movie2.mp4
+    URL: D:\Maryam_Work\VideoPlayer\VideoPlayer\videoSmple\movie2.mp4
+  - Name: movie1.mp4
+    URL: D:\Maryam_Work\VideoPlayer\VideoPlayer\videoSmple\movie1.mp4

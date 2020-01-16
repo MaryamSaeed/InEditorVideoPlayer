@@ -18,6 +18,7 @@ public class VideoController
     private StyleBackground soundMute;
     private StyleBackground soundUp;
     private TimeSpan timeSpan;
+
     public VideoController(VideoPlayer activeplayer, VisualElement root)
     {
         videoPlayer = activeplayer;
@@ -29,6 +30,21 @@ public class VideoController
         videoValidity.visible = false;
         videoPlayer.frameReady += OnNewFrameReady;
         videoPlayer.prepareCompleted += OnVideoPrepared;
+    }
+    public void OnPlayVideoAtUrl(string url)
+    {
+        if (File.Exists(url))
+        {
+            videoPlayer.url = url;
+            videoPlayer.Prepare();
+            videoValidity.visible = false;
+        }
+        else
+            videoValidity.visible = true;
+    }
+    public void OnPlaylistChanged()
+    {
+        StopVideo();
     }
     private void PlayVideo()
     {
@@ -77,11 +93,14 @@ public class VideoController
     }
     private void InitScrubBar()
     {
-        scrubBar = windowRoot.Query<Slider>("scrubBar");
+        if (scrubBar == null)
+            scrubBar = windowRoot.Query<Slider>("scrubBar");
         scrubBar.highValue = (float)videoPlayer.length;
         scrubBar.RegisterCallback<ChangeEvent<float>>(evt => OnChangeProgress(evt.newValue));
-        videoTime = windowRoot.Query<Label>("videoTime");
-        seekTime = windowRoot.Query<Label>("seekTime");
+        if (videoTime == null)
+            videoTime = windowRoot.Query<Label>("videoTime");
+        if (seekTime == null)
+            seekTime = windowRoot.Query<Label>("seekTime");
         InitVideoTimeText();
     }
     private void LoadMuteToggleImages()
@@ -133,20 +152,5 @@ public class VideoController
     private void OnNewFrameReady(VideoPlayer source, long frameIdx)
     {
         UpdateSeekTime((float)source.time);
-    }
-    public void OnPlayVideoAtUrl(string url)
-    {
-        if (File.Exists(url))
-        {
-            videoPlayer.url = url;
-            videoPlayer.Prepare();
-            videoValidity.visible = false;
-        }
-        else
-            videoValidity.visible = true;
-    }
-    public void OnPlaylistChanged()
-    {
-        StopVideo();
     }
 }

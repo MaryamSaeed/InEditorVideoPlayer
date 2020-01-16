@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using WindowsForms = System.Windows.Forms;
+﻿using WindowsForms = System.Windows.Forms;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -20,12 +18,12 @@ public class PlaylistInspector : Editor
     private WindowsForms.OpenFileDialog filePicker;
     void OnEnable()
     {
-        targetAsset = (PlaylistAsset)target;
-        if (targetAsset.VideoClipList == null)
-            targetAsset.VideoClipList = new List<VideoClipData>();
+        targetAsset = (PlaylistAsset)serializedObject.targetObject;
+        EditorUtility.SetDirty(targetAsset);
     }
     public override VisualElement CreateInspectorGUI()
     {
+        serializedObject.Update();
         root = new VisualElement();
         root.Clear();
         root.style.flexDirection = FlexDirection.Column;
@@ -131,6 +129,7 @@ public class PlaylistInspector : Editor
                     targetAsset.VideoClipList.Add(videoData);
                     playlistView.Refresh();
                 }
+            serializedObject.ApplyModifiedProperties();
         }
     }
     private void OnRemoveVideoClicked()
@@ -138,5 +137,6 @@ public class PlaylistInspector : Editor
         targetAsset.VideoClipList.Remove(selectedItem);
         playlistView.Refresh();
         removeVideoButton.visible = false;
+        serializedObject.ApplyModifiedProperties();
     }
 }

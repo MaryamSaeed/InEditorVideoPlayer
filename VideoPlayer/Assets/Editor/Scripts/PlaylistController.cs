@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using System.Collections.Generic;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.Events;
@@ -17,8 +15,6 @@ public class PlaylistController
     private Label playlistTitle;
     private Label PlaylistStatus;
     private int currentVideoId = 0;
-    private bool repeat;
-    private bool autoplay;
     private const int itemHeight = 20;
     public PlaylistController(VisualElement root)
     {
@@ -53,7 +49,7 @@ public class PlaylistController
     private System.Func<VisualElement> makeItem = () => new Label();
     private System.Action<VisualElement, int> bindListItem = (e, i) =>
     {
-            (e as Label).text = nowPlaying.VideoClipList[i].Name;
+        (e as Label).text = nowPlaying.VideoClipList[i].Name;
     };
     private ListView InitVideoListView(List<VideoClipData> source)
     {
@@ -131,6 +127,7 @@ public class PlaylistController
     {
         if (PlayVideoAtUrl != null)
             PlayVideoAtUrl.Invoke(((VideoClipData)chosen).URL);
+        currentVideoId = videoListView.selectedIndex;
     }
 }
 
