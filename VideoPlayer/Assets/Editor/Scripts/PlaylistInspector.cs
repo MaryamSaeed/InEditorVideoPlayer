@@ -115,6 +115,7 @@ public class PlaylistInspector : Editor
         selectedItem = (VideoClipData)obj;
         removeVideoButton.visible = true;
     }
+    //TODO : CodeSmell - Long Code
     private void OnAddVideoClicked()
     {
         string path = Directory.GetCurrentDirectory();

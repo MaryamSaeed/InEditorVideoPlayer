@@ -68,6 +68,7 @@ public class VideoController
         videoTime.text = Seconds2String((float)videoPlayer.length);
         scrubBar.lowValue = 0;
     }
+    //TODO: Code Smell - Long Method
     private void SetupControllerButton(Button button)
     {
         var buttonIcon = button.Q(className: "videoplayer-button-icon");
