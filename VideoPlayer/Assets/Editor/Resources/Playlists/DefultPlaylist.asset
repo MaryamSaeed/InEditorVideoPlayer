@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: DefultPlaylist
   m_EditorClassIdentifier: 
   PlaylistTitle: DefultPlaylist
-  VideoClipList: []
+  VideoClipList:
+  - Name: movie1.mp4
+    URL: E:\VideoPlayer\VideoPlayer\videoSmple\movie1.mp4

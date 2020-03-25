@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 public class PlaylistController
 {
     public UnityEvent PlaylistChanged;
-    public PlaylistEvent PlayVideoAtUrl;
+    public PlaylistEvent PlayVideoAtPath;
     private static PlaylistAsset nowPlaying;
     private VisualElement windowRoot;
     private VisualElement videoListArea;
@@ -20,7 +20,7 @@ public class PlaylistController
     {
         windowRoot = root;
         PlaylistChanged = new UnityEvent();
-        PlayVideoAtUrl = new PlaylistEvent();
+        PlayVideoAtPath = new PlaylistEvent();
         InitPlaylistVisualElements();
         InitControllerButtons();
     }
@@ -115,8 +115,8 @@ public class PlaylistController
     {
         videoListView.selectedIndex = currentVideoId;
         var url = nowPlaying.VideoClipList[id].URL;
-        if (PlayVideoAtUrl != null)
-            PlayVideoAtUrl.Invoke(url);
+        if (PlayVideoAtPath != null)
+            PlayVideoAtPath.Invoke(url);
     }
     private void NextVideo()
     {
@@ -136,10 +136,8 @@ public class PlaylistController
     }
     private void OnVideoChosen(System.Object chosen)
     {
-        if (PlayVideoAtUrl != null)
-            PlayVideoAtUrl.Invoke(((VideoClipData)chosen).URL);
+        if (PlayVideoAtPath != null)
+            PlayVideoAtPath.Invoke(((VideoClipData)chosen).URL);
         currentVideoId = videoListView.selectedIndex;
     }
 }
-
-
