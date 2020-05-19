@@ -15,4 +15,4 @@ MonoBehaviour:
   PlaylistTitle: DefultPlaylist
   VideoClipList:
   - Name: movie1.mp4
-    URL: E:\VideoPlayer\VideoPlayer\videoSmple\movie1.mp4
+    URL: C:\Users\Win8\Documents\GitHub\VideoPlayer\VideoPlayer\videoSmple\movie1.mp4

@@ -19,26 +19,39 @@ public class PlaylistInspector : Editor
     private WindowsForms.OpenFileDialog filePicker;
     void OnEnable()
     {
-        targetAsset = (PlaylistAsset)serializedObject.targetObject;
+        targetAsset = (PlaylistAsset) serializedObject.targetObject;
         if (targetAsset.VideoClipList == null)
             targetAsset.VideoClipList = new List<VideoClipData>();
         EditorUtility.SetDirty(targetAsset);
     }
+    /// <summary>
+    /// clearing original inspector structure
+    /// building the new structure
+    /// </summary>
+    /// <returns></returns>
     public override VisualElement CreateInspectorGUI()
     {
         root = new VisualElement();
         root.Clear();
         root.style.flexDirection = FlexDirection.Column;
         root.style.justifyContent = Justify.SpaceBetween;
-        AddPlaylistInpectorVisualElements();
+        AddPlaylistInspectorVisualElements();
         return root;
     }
+    /// <summary>
+    /// creates file picker instance that
+    /// picks only videos in MP4 format
+    /// </summary>
     private void InitFilePicker()
     {
         filePicker = new WindowsForms.OpenFileDialog();
         filePicker.Filter = "All Videos Files |*.mp4;";
         filePicker.Multiselect = true;
     }
+    /// <summary>
+    /// draws property fields corresponding to playlist properties
+    /// to edit and sa
+    /// </summary>
     private void AddPropertyFields()
     {
         root.Add(new PropertyField(serializedObject.FindProperty("PlaylistTitle")));
@@ -48,6 +61,10 @@ public class PlaylistInspector : Editor
         targetAsset.PlaylistTitle = serializedObject.targetObject.name;
         serializedObject.ApplyModifiedProperties();
     }
+    /// <summary>
+    /// writes popup instructions to help remove video 
+    /// from list
+    /// </summary>
     private void AddRemovalInstructions()
     {
         Label removalText = new Label("double click on video to remove");
@@ -55,7 +72,10 @@ public class PlaylistInspector : Editor
         removalText.style.color = Color.red;
         root.Add(removalText);
     }
-    private void AddPlaylistInpectorVisualElements()
+    /// <summary>
+    /// adds the visual elements of the new inspector structure
+    /// </summary>
+    private void AddPlaylistInspectorVisualElements()
     {
         InitFilePicker();
         AddPropertyFields();
@@ -63,19 +83,34 @@ public class PlaylistInspector : Editor
         SetupPlaylistInspectorButtons();
         AddRemovalInstructions();
     }
+    /// <summary>
+    /// configure tha buttons with its corresponding functionality
+    /// </summary>
     private void SetupPlaylistInspectorButtons()
     {
         //Video Addition Button
-        AddButton2InspectorRoot("Add video from HD",OnAddVideoClicked);
+        AddButton2InspectorRoot("Add video from HD", OnAddVideoClicked);
         //Video Removal Button
         removeVideoButton = AddButton2InspectorRoot("Remove video from list", OnRemoveVideoClicked);
         removeVideoButton.visible = false;
     }
+    /// <summary>
+    /// draws labels of the Listview elements
+    /// </summary>
     private System.Func<VisualElement> makeItem = () => new Label();
+    /// <summary>
+    /// binds the list viewelement label with the corresponding list element
+    /// </summary>
     private System.Action<VisualElement, int> bindListItem = (e, i) =>
     {
         (e as Label).text = targetAsset.VideoClipList[i].Name;
     };
+    /// <summary>
+    /// creates a button with a name and functionality
+    /// </summary>
+    /// <param name="buttontext">button screen name</param>
+    /// <param name="action">the functionality of the button</param>
+    /// <returns></returns>
     private Button AddButton2InspectorRoot(string buttontext, System.Action action)
     {
         Button newButton = new Button();
@@ -115,8 +150,7 @@ public class PlaylistInspector : Editor
         selectedItem = (VideoClipData)obj;
         removeVideoButton.visible = true;
     }
-    //TODO : CodeSmell - Long Code
-    private void OnAddVideoClicked()
+    public void OnAddVideoClicked()
     {
         string path = Directory.GetCurrentDirectory();
         WindowsForms.DialogResult result = filePicker.ShowDialog();
@@ -126,14 +160,25 @@ public class PlaylistInspector : Editor
             if (filesCount > 0)
                 for (int i = 0; i < filesCount; i++)
                 {
-                    VideoClipData videoData = new VideoClipData();
-                    videoData.URL = filePicker.FileNames[i];
-                    videoData.Name = filePicker.SafeFileNames[i];
-                    targetAsset.VideoClipList.Add(videoData);
-                    playlistView.Refresh();
+                    AddPickedVideo2Playlist(i);
                 }
         }
     }
+
+    private void AddPickedVideo2Playlist(int i)
+    {
+        VideoClipData videoData = new VideoClipData();
+        videoData.URL = filePicker.FileNames[i];
+        videoData.Name = filePicker.SafeFileNames[i];
+        AddVideoData2ListView(videoData);
+    }
+
+    public void AddVideoData2ListView(VideoClipData videoData)
+    {
+        targetAsset.VideoClipList.Add(videoData);
+        playlistView.Refresh();
+    }
+
     private void OnRemoveVideoClicked()
     {
         targetAsset.VideoClipList.Remove(selectedItem);
