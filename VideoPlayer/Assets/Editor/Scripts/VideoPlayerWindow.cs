@@ -68,7 +68,7 @@ public class VideoPlayerWindow : EditorWindow
         string path = "Assets/Editor/Resources/Prefabs/VideoPlayer.prefab";
         GameObject prefabObject = Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(path));
         videoPlayer = prefabObject.GetComponent<VideoPlayer>();
-        videoPlayer.renderMode = VideoRenderMode.APIOnly;
+        videoPlayer.renderMode = VideoRenderMode.RenderTexture;
         videoPlayer.targetTexture = InitVideoRendererTexture(windowRoot);
         videoPlayer.sendFrameReadyEvents = true;
         videoPlayer.frameReady += OnNewFrameReady;
