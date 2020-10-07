@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.Video;
 /// <summary>
@@ -15,23 +14,15 @@ public class VideoController
     private VisualElement windowRoot;
     //UI video scrub Bar/Progress Bar
     private Slider scrubBar;
-    //UI volume slider
-    private Slider volumeSlider;
-    //UI mute toggle
-    private Toggle muteToggle;
     //UI text for video time
     private Label videoTime;
     //UI text for seektime
     private Label seekTime;
     //UI text indecating video validity
     private Label videoValidity;
-    //UI image holding the toggle
-    private VisualElement toggelImage;
-    //UI image with mute graphic
-    private StyleBackground soundMute;
-    //UI image with unmute graphic
-    private StyleBackground soundUp;
     private TimeSpan timeSpan;
+    //sound controller of the video
+    private VideoSoundController videoSoundColtroller;
 
     //cot
     public VideoController(VideoPlayer activeplayer, VisualElement root)
@@ -40,7 +31,7 @@ public class VideoController
         windowRoot = root;
         InitControllerButtons();
         InitScrubBarArea();
-        InitVolumeControllers();
+        videoSoundColtroller = new VideoSoundController(activeplayer, windowRoot);
         videoValidity = windowRoot.Q<Label>("VideoValidity");
         videoValidity.visible = false;
         videoPlayer.frameReady += OnNewFrameReady;
@@ -61,9 +52,7 @@ public class VideoController
             videoValidity.visible = false;
         }
         else
-        {
             videoValidity.visible = true;
-        }
     }
     /// <summary>
     /// when the currently played playlist change
@@ -162,59 +151,6 @@ public class VideoController
         if (seekTime == null)
             seekTime = windowRoot.Query<Label>("seekTime");
         InitVideoTimeText();
-    }
-    /// <summary>
-    /// loads the necessary graphics
-    /// for the mute button
-    /// </summary>
-    private void LoadMuteToggleImages()
-    {
-        //Reference to toggle checkmarck
-        toggelImage = windowRoot.Q("unity-checkmark");
-        //loading the mute texture from folder
-        soundMute = new StyleBackground(Resources.Load<Texture2D>("Icons/Sound_mute"));
-        //loading the unmute texture folder
-        soundUp = new StyleBackground(Resources.Load<Texture2D>("Icons/Sound_Up"));
-    }
-    /// <summary>
-    /// initializes the sound control buttons and sliders
-    /// </summary>
-    private void InitVolumeControllers()
-    {
-        LoadMuteToggleImages();
-        muteToggle = windowRoot.Query<Toggle>("muteToggle");
-        // rgisters the mute action with toggle
-        muteToggle.RegisterCallback<ChangeEvent<bool>>(evt => OnMuteVolume(evt.newValue));
-        volumeSlider = windowRoot.Query<Slider>("volumeSlider");
-        volumeSlider.value = 1;
-        videoPlayer.SetDirectAudioVolume(0, 1);
-        //registers sound level change with slider value change action
-        volumeSlider.RegisterCallback<ChangeEvent<float>>(evt => OnChangeVolumeLevel(evt.newValue));
-    }
-    /// <summary>
-    /// handles mute action
-    /// </summary>
-    /// <param name="ison">toggle status</param>
-    private void OnMuteVolume(bool ison)
-    {
-        videoPlayer.SetDirectAudioMute(0, ison);
-        volumeSlider.SetEnabled(!ison);
-        if (ison)
-        {
-            toggelImage.style.backgroundImage = soundMute;
-        }
-        else
-        {
-            toggelImage.style.backgroundImage = soundUp;
-        }
-    }
-    /// <summary>
-    /// handles volume level change action
-    /// </summary>
-    /// <param name="value">the slider value</param>
-    private void OnChangeVolumeLevel(float value)
-    {
-        videoPlayer.SetDirectAudioVolume(0, value);
     }
     /// <summary>
     /// handles the scrub bar value change

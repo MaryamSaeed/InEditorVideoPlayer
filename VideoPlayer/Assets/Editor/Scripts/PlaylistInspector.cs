@@ -19,7 +19,7 @@ public class PlaylistInspector : Editor
     private WindowsForms.OpenFileDialog filePicker;
     void OnEnable()
     {
-        targetAsset = (PlaylistAsset) serializedObject.targetObject;
+        targetAsset = (PlaylistAsset)serializedObject.targetObject;
         if (targetAsset.VideoClipList == null)
             targetAsset.VideoClipList = new List<VideoClipData>();
         EditorUtility.SetDirty(targetAsset);
@@ -120,6 +120,9 @@ public class PlaylistInspector : Editor
         root.Add(newButton);
         return newButton;
     }
+    /// <summary>
+    /// creats a container to hold the listviwe visual elemnt
+    /// </summary>
     private void AddPlaylistVisualElement()
     {
         VisualElement playlistContainer = new VisualElement();
@@ -137,6 +140,10 @@ public class PlaylistInspector : Editor
         container.style.borderColor = Color.grey;
         container.style.backgroundColor = Color.white;
     }
+    /// <summary>
+    /// initilizes the playlist's listview at the given container
+    /// </summary>
+    /// <param name="container">list view holder element</param>
     private void AddListView2Container(VisualElement container)
     {
         playlistView = new ListView(targetAsset.VideoClipList, itemHeight, makeItem, bindListItem);
@@ -145,11 +152,20 @@ public class PlaylistInspector : Editor
         playlistView.style.flexGrow = 1.0f;
         container.Add(playlistView);
     }
+    /// <summary>
+    /// shows the Remove video button when the user highlights a video
+    /// fom the playlist's listview
+    /// </summary>
+    /// <param name="obj"></param>
     private void OnItemChosen(System.Object obj)
     {
         selectedItem = (VideoClipData)obj;
         removeVideoButton.visible = true;
     }
+    /// <summary>
+    /// triggers the Filepicker and enables the user to select video(s)
+    /// to be added to the playlist
+    /// </summary>
     public void OnAddVideoClicked()
     {
         string path = Directory.GetCurrentDirectory();
@@ -159,12 +175,13 @@ public class PlaylistInspector : Editor
             var filesCount = filePicker.FileNames.Length;
             if (filesCount > 0)
                 for (int i = 0; i < filesCount; i++)
-                {
                     AddPickedVideo2Playlist(i);
-                }
         }
     }
-
+    /// <summary>
+    /// extracts the video data from the returned picker object
+    /// </summary>
+    /// <param name="i"></param>
     private void AddPickedVideo2Playlist(int i)
     {
         VideoClipData videoData = new VideoClipData();
@@ -172,13 +189,18 @@ public class PlaylistInspector : Editor
         videoData.Name = filePicker.SafeFileNames[i];
         AddVideoData2ListView(videoData);
     }
-
+    /// <summary>
+    /// saves the desired video'uri and at HD to paylist
+    /// </summary>
+    /// <param name="videoData">the object contaning the video location on HD</param>
     public void AddVideoData2ListView(VideoClipData videoData)
     {
         targetAsset.VideoClipList.Add(videoData);
         playlistView.Refresh();
     }
-
+    /// <summary>
+    /// delets the highlighted video from the playlist
+    /// </summary>
     private void OnRemoveVideoClicked()
     {
         targetAsset.VideoClipList.Remove(selectedItem);

@@ -2,8 +2,6 @@
 using UnityEditor;
 using UnityEngine.UIElements;
 using UnityEngine.Video;
-using System.IO;
-using UnityEditor.UIElements;
 /// <summary>
 /// the window class which initilize and terminates the video Player UI and Logic
 /// </summary>
@@ -70,7 +68,7 @@ public class VideoPlayerWindow : EditorWindow
         string path = "Assets/Editor/Resources/Prefabs/VideoPlayer.prefab";
         GameObject prefabObject = Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(path));
         videoPlayer = prefabObject.GetComponent<VideoPlayer>();
-        videoPlayer.renderMode = VideoRenderMode.RenderTexture;
+        videoPlayer.renderMode = VideoRenderMode.APIOnly;
         videoPlayer.targetTexture = InitVideoRendererTexture(windowRoot);
         videoPlayer.sendFrameReadyEvents = true;
         videoPlayer.frameReady += OnNewFrameReady;
@@ -89,7 +87,7 @@ public class VideoPlayerWindow : EditorWindow
     /// <summary>
     /// unscbscribe the registered events
     /// </summary>
-    private void UnRegiterSubscriptions()
+    private void UnRegisterSubscriptions()
     {
         playlistController.PlayVideoAtPath.RemoveAllListeners();
         playlistController.PlaylistChanged.RemoveAllListeners();
@@ -126,7 +124,7 @@ public class VideoPlayerWindow : EditorWindow
         // release the target texture memory
         videoPlayer.targetTexture.Release();
         // remove the old subscriptions
-        UnRegiterSubscriptions();
+        UnRegisterSubscriptions();
         // Destroy the video player Gameobject
         DestroyImmediate((Object)videoPlayer.gameObject);
     }
